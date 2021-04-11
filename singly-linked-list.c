@@ -239,7 +239,7 @@ int deleteNode(headNode* h, int key) {
 	}
 	else if (temp->key == key)//삭제할 노드가 리스트의 맨 앞에 있을 때
 	{
-		deleteFirst(h, key); //리스트의 첫 번째 노드를 삭제하는 것과 같으므로 deleteFirst 함수 호출
+		deleteFirst(h); //리스트의 첫 번째 노드를 삭제하는 것과 같으므로 deleteFirst 함수 호출
 	}
 	else //리스트가 비어있지 않고 삭제할 노드가 리스트의 맨 앞에 있지 않을 때
 	{
