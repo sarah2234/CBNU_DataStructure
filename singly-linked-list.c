@@ -153,33 +153,33 @@ int insertFirst(headNode* h, int key) {
 }
 
 
-/* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
+/* 리스트를 검색하여, 입력받은 key보다 큰 값이 나오는 노드 바로 앞에 삽입 */
 int insertNode(headNode* h, int key) {
-	listNode* temp = h->first;
-	listNode* trail = h->first; //trail=previous?
-	listNode* insert = (listNode*)malloc(sizeof(listNode)); 
-	insert->key = key;
+	listNode* temp = h->first; //입력받은 key와 값을 비교할 노드를 가리키는 포인터 temp 선언 후 리스트의 맨앞을 가리키도록 초기화
+	listNode* trail = h->first; //key 값이 temp가 가리키는 노드의 앞에 배치되도록 temp의 선행 노드를 가리키는 포인터 trail 선언 후 리스트의 맨앞을 가리키도록 초기화
+	listNode* insert = (listNode*)malloc(sizeof(listNode)); //입력받은 key 값을 리스트에 삽입하도록 insert 포인터 생성 후 메모리 할당
+	insert->key = key; //key 값을 insert의 key에 저장
 	if (!h->first || temp->key > insert->key) //리스트가 비어있거나 key가 맨앞에 위치해야할 때
 	{
-		insertFirst(h, key);
+		insertFirst(h, key); //리스트의 맨앞에 key를 삽입해야 하므로 insertFirst 함수 호출
 	}
 	else
 	{
-		while (temp != NULL)
+		while (temp != NULL)//노드의 link가 리스트의 끝인 NULL을 가리키기 전까지 반복문 실행
 		{
-			if (temp->key > insert->key)
+			if (temp->key > insert->key) //입력받은 key보다 큰 값이 나오는 노드를 발견
 			{
-				insert->link = temp;
-				trail->link = insert;
-				return 0;
+				insert->link = temp; //insert의 link가 temp를 가리켜 insert의 값이 temp가 가리키는 노드 앞에 오도록 배치
+				trail->link = insert;//이전 노드를 가리키는 trail의 link가 insert를 가리켜 insert가 trail 뒤에 오도록 배치
+				return 0; //insert를 리스트에 삽입하면 함수 종료
 			}
-			trail = temp;
-			temp = temp->link;
+			trail = temp; //temp가 다음 노드를 가리키기 전 trail에 저장하여 trail을 temp의 선행 노드로 취급
+			temp = temp->link; //temp가 다음 노드를 가리킴
 		}
-		trail->link = insert;
-		insert->link = NULL;
+		trail->link = insert; //입력받은 key보다 큰 값을 리스트에서 찾지 못하면 마지막 노드를 가리키는 포인터 trail의 link가 insert를 가리킴
+		insert->link = NULL; //insert의 link가 NULL을 가리켜 리스트의 끝을 알림
 	}
-	return 0;
+	return 0; //insert를 리스트에 삽입하면 함수 종료
 }
 
 /**
