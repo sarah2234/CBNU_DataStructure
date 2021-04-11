@@ -210,9 +210,11 @@ int insertLast(headNode* h, int key) {
  * list의 첫번째 노드 삭제
  */
 int deleteFirst(headNode* h) {
+	listNode* temp = h->first; //삭제할 노드를 가리키는 포인터 temp 선언 후 리스트의 맨 앞을 가리키도록 초기화
+	h->first = temp->link; //리스트의 맨 앞 노드가 temp의 link가 가리키는 노드, 즉 2번째 노드를 가리키도록 하여 temp 노드를 리스트에서 삭제
+	free(temp); //리스트의 첫 번째 노드 삭제 후 temp의 메모리 해제
 
-
-	return 0;
+	return 0; //temp가 가리키는 노드를 삭제하면 함수 종료
 }
 
 
