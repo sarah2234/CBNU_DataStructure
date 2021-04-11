@@ -290,8 +290,19 @@ int deleteLast(headNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(headNode* h) {
+	listNode* lead, *middle, *trail; //앞, 중간, 뒷 노드를 순서대로 가리킬 포인터 lead, middle, trail 선언
+	lead = h->first; //lead가 리스트의 맨 앞 노드를 가리키도록 함
+	middle = NULL; //middle이 아직 노드를 가리키지 않은 상태
+	while (lead) //리스트 처음부터 끝에 도달할 때까지
+	{
+		trail = middle; //뒷 노드를 가리키는 trail이 중간 노드를 가리키는 middle이 가리키는 노드로 바꿈
+		middle = lead; //중간 노드를 가리키는 middle이 앞 노드를 가리키는 lead가 가리키는 노드로 바꿈
+		lead = lead->link; //lead는 그 다음 노드를 가리킴 
+		middle->link = trail; //middle이 가리키는 노드 다음에 trail이 가리키는 노드가 올 수 있도록 수정
+	}
+	h->first = middle; //리스트의 맨 앞 노드가 바뀌었으므로 middle이 가리키는 노드가 리스트의 맨 앞인 것을 명시
 
-	return 0;
+	return 0; //함수 정상 작동 후 종료
 }
 
 
