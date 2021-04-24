@@ -39,9 +39,9 @@ int initialize(headNode** h); //리스트를 생성하거나 초기화하는 intialize 함수 선
 		- 이중포인터를 매개변수로 받아도 해제할 수 있을 것 */
 int freeList(headNode* h); //리스트의 모든 노드에 대해 메모리를 해제하는 freeList 함수 선언
 
-int insertNode(headNode* h, int key);
-int insertLast(headNode* h, int key);
-int insertFirst(headNode* h, int key);
+int insertNode(headNode* h, int key); //리스트에 있는 노드들과 key 값을 비교하여 노드를 삽입하는 inserNode 함수 선언
+int insertLast(headNode* h, int key); ////리스트의 맨 끝에 노드를 삽입하는 insertLast 함수 선언
+int insertFirst(headNode* h, int key); //리스트의 맨 앞에 노드를 삽입하는 insertFirst 함수 선언
 int deleteNode(headNode* h, int key);
 int deleteLast(headNode* h);
 int deleteFirst(headNode* h);
@@ -120,19 +120,18 @@ int main()
 }
 
 
-int initialize(headNode** h) {
-	/*if (*h != NULL)
-		freelist(*h);*/ //컴파일 오류 발생
-	//headNode가 NULL이 아니면 freelist를 호출하여 할당된 메모리 모두 삭제
+int initialize(headNode** h) { //이중 포인터 h로 헤드 노드의 주소를 받아 헤드 노드를 함수 내에서 변경 가능
+	if (*h != NULL) //리스트의 헤드가 NULL이 아닐 때 조건문 실행
+		freeList(*h); //리스트 내 노드들의 메모리 해제를 위해 freeList 함수 호출 (헤드 노드의 값 전달)
 
-	headNode* temp = (headNode*)malloc(sizeof(headNode)); //headNode에 대한 메모리 할당
-	temp->first = NULL; //첫 번째 노드가 NULL이 되도록 설정
-	*h = temp; //리스트의 첫 번째 노드가 temp가 되도록 함
+	headNode* temp = (headNode*)malloc(sizeof(headNode)); //리스트의 초기화를 위한 헤드 노드 temp 선언 후 메모리 할당
+	temp->first = NULL; //temp가 NULL을 가리키도록 함
+	*h = temp; //헤드가 NULL을 가리키도록 temp의 값으로 설정
 
 	return 1;
 }
 
-int freeList(headNode* h) {
+int freeList(headNode* h) { //헤드 노드의 값을 변경해야하는 intialize와 달리 값에 접근할 수만 있으면 되기 때문에 단일 포인터 사용
 	listNode* p = h->first; //포인터 p 선언 후 리스트의 맨 앞 노드를 가리키도록 초기화
 	while (p->rlink) //후위 노드가 NULL일 때, 즉 리스트의 맨 끝에 도달할 때까지 반복
 	{
@@ -173,7 +172,24 @@ void printList(headNode* h) {
  * list에 key에 대한 노드하나를 추가
  */
 int insertLast(headNode* h, int key) {
-
+	listNode* temp = h->first; //리스트의 노드를 조사할 포인터 temp 선언 후 리스트의 맨 앞을 가리키도록 초기화
+	listNode* insert = (listNode*)malloc(sizeof(listNode)); //입력받은 key 값을 리스트에 삽입하도록 insert 포인터 생성 후 메모리 할당
+	insert->key = key; //key 값을 insert의 key에 저장
+	if (!h->first) //리스트가 비어있을 때 조건문 실행
+	{
+		insertFirst(h, key); //리스트의 맨 앞에 key를 삽입하는 것과 같으므로 insertFirst 함수 호출
+	}
+	else //리스트가 비어있지 않을 때 else문 실행
+	{
+		while (temp->rlink) //temp의 후위 노드가 NULL, 즉 리스트의 끝에 도달하기 전까지 반복
+		{
+			temp = temp->rlink; //temp가 다음 노드를 가리킴
+		}
+		insert->rlink = NULL; //temp가 마지막 노드를 가리킬 때 while문 종료 후 insert의 rlink가 NULL을 가리켜  리스트의 끝을 알림
+		insert->llink = temp; //insert의 왼쪽에 temp 노드가 올 수 있도록 변경
+		temp->rlink = insert; //temp의 오른쪽에 insert 노드가 올 수 있도록 변경
+		
+	}
 
 	return 0;
 }
