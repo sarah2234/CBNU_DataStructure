@@ -195,6 +195,12 @@ int deleteLast(headNode* h) {
  * list 처음에 key에 대한 노드하나를 추가
  */
 int insertFirst(headNode* h, int key) {
+	listNode* insert = (listNode*)malloc(sizeof(listNode)); //입력받은 key 값을 삽입하기 위한 포인터 insert 선언 후 메모리 할당
+	insert->key = key; //입력받은 key 값을 insert의 key에 저장
+
+	insert->rlink = h->first; //insert의 다음 노드가 현재 리스트의 맨 앞 노드를 가리키도록 함
+	h->first = insert; //리스트의 맨 앞 노드를 insert가 가리키는 노드로 수정
+
 	return 0;
 }
 
