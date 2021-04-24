@@ -140,7 +140,7 @@ int freeList(headNode* h) {
 		free(p->llink); //p가 가리키는 노드의 전위 노드의 메모리 해제
 	}
 	free(h); //리스트의 맨 앞 노드의 메모리 해제
-	return 0;
+	return 0; 
 }
 
 
@@ -173,6 +173,7 @@ void printList(headNode* h) {
  * list에 key에 대한 노드하나를 추가
  */
 int insertLast(headNode* h, int key) {
+
 
 	return 0;
 }
@@ -219,6 +220,30 @@ int invertList(headNode* h) {
 
 /* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
 int insertNode(headNode* h, int key) {
+	listNode* temp = h->first; //입력받은 key와 값을 비교할 노드를 가리키는 포인터 temp 선언 후 리스트의 맨 앞을 가리키도록 초기화
+	listNode* insert = (listNode*)malloc(sizeof(listNode)); //입력받은 key 값을 리스트에 삽입하도록 insert 포인터 생성 후 메모리 할당
+	insert->key = key; //입력받은 key 값을 insert의 key에 저장
+	if (!h->first || temp->key > insert->key) //리스트가 비어있거나 key가 맨앞에 위치해야할 때
+	{
+		insertFirst(h, key); //리스트의 맨 앞에 key를 삽입하는 것과 같으므로 insertFirst 함수 호출
+	}
+	else //리스트가 비어있지 않을 때
+	{
+		while (temp != NULL)//리스트의 끝인 NULL이 되기 전까지 반복문 실행
+		{
+			if (temp->key > insert->key) //입력받은 key보다 큰 값이 나오는 노드를 발견
+			{
+				insert->rlink = temp; //insert의 오른쪽에 temp가 올 수 있도록 변경
+				insert->llink = temp->llink;//insert의 왼쪽에 temp의 전위 노드가 올 수 있도록 변경
+				temp->llink->rlink = insert; //temp의 전위 노드 오른쪽에 insert가 올 수 있도록 변경 
+				temp->llink = insert; //temp의 왼쪽에 insert가 올 수 있도록 변경
+				return 0; //insert가 가리키는 노드를 리스트에 삽입하면 함수 종료
+			}
+			temp = temp->rlink; //temp가 다음 노드를 가리킴
+		}
+		temp->llink = insert; //입력받은 key보다 큰 값을 리스트에서 찾지 못하면 마지막 노드가 insert가 됨
+		insert->rlink = NULL; //insert의 rlink가 NULL을 가리켜 리스트의 끝을 알림
+	}
 
 	return 0;
 }
