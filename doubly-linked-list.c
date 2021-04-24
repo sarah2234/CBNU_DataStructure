@@ -19,7 +19,7 @@
 typedef struct Node {
 	int key; //노드의 값을 저장하는 key 선언
 	struct Node* llink; //전위 노드를 가리키는 포인터형 link 선언
-	struct Node* rlink; ////후위 노드를 가리키는 포인터형 link 선언
+	struct Node* rlink; //후위 노드를 가리키는 포인터형 link 선언
 } listNode; //노드를 생성하기 위한 구조체 Node 선언 후 listNode로 재정의
 
 
@@ -37,7 +37,7 @@ int initialize(headNode** h); //리스트를 생성하거나 초기화하는 intialize 함수 선
 /* note: freeList는 싱글포인터를 매개변수로 받음
 		- initialize와 왜 다른지 이해 할것
 		- 이중포인터를 매개변수로 받아도 해제할 수 있을 것 */
-int freeList(headNode* h);
+int freeList(headNode* h); //리스트의 모든 노드에 대해 메모리를 해제하는 freeList 함수 선언
 
 int insertNode(headNode* h, int key);
 int insertLast(headNode* h, int key);
@@ -133,6 +133,13 @@ int initialize(headNode** h) {
 }
 
 int freeList(headNode* h) {
+	listNode* p = h->first; //포인터 p 선언 후 리스트의 맨 앞 노드를 가리키도록 초기화
+	while (p->rlink) //후위 노드가 NULL일 때, 즉 리스트의 맨 끝에 도달할 때까지 반복
+	{
+		p = p->rlink; //p가 후위 노드를 가리킴
+		free(p->llink); //p가 가리키는 노드의 전위 노드의 메모리 해제
+	}
+	free(h); //리스트의 맨 앞 노드의 메모리 해제
 	return 0;
 }
 
