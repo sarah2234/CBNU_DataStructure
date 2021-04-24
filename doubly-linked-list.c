@@ -198,7 +198,11 @@ int insertFirst(headNode* h, int key) {
 	listNode* insert = (listNode*)malloc(sizeof(listNode)); //입력받은 key 값을 삽입하기 위한 포인터 insert 선언 후 메모리 할당
 	insert->key = key; //입력받은 key 값을 insert의 key에 저장
 
-	insert->rlink = h->first; //insert의 다음 노드가 현재 리스트의 맨 앞 노드를 가리키도록 함
+	insert->rlink = h->first; //insert의 오른쪽에 현재 리스트의 맨 앞 노드가 올 수 있도록 변경
+	if (h->first) //리스트가 공백이 아닐 때 조건문 실행
+	{
+		h->first->llink = insert; //현재 리스트의 맨 앞 노드의 왼쪽에 insert가 올 수 있도록 변경
+	}
 	h->first = insert; //리스트의 맨 앞 노드를 insert가 가리키는 노드로 수정
 
 	return 0;
@@ -247,8 +251,7 @@ int insertNode(headNode* h, int key) {
 			}
 			temp = temp->rlink; //temp가 다음 노드를 가리킴
 		}
-		temp->llink = insert; //입력받은 key보다 큰 값을 리스트에서 찾지 못하면 마지막 노드가 insert가 됨
-		insert->rlink = NULL; //insert의 rlink가 NULL을 가리켜 리스트의 끝을 알림
+		insertLast(h, key); //입력받은 key보다 큰 값을 리스트에서 찾지 못하면 insert 노드를 리스트의 끝에 배치
 	}
 
 	return 0;
