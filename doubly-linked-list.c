@@ -135,10 +135,12 @@ int initialize(headNode** h) { //이중 포인터 h로 헤드 노드의 주소를 받아 헤드 노
 
 int freeList(headNode* h) { //헤드 노드의 값을 변경해야하는 intialize와 달리 값을 읽을 수만 있으면 되기 때문에 단일 포인터 사용
 	listNode* p = h->first; //포인터 p 선언 후 리스트의 맨 앞 노드를 가리키도록 초기화
-	while (p->rlink) //후위 노드가 NULL일 때, 즉 리스트의 맨 끝에 도달할 때까지 반복
+	listNode* prev = NULL; //p의 전위 노드를 가리킬 prev 선언
+	while (p != NULL) //리스트의 맨 끝에 도달할 때까지 반복
 	{
-		p = p->rlink; //p가 후위 노드를 가리킴
-		free(p->llink); //p가 가리키는 노드의 전위 노드의 메모리 해제
+		prev = p; //p가 다음 노드를 가리키기 전 prev가 p의 노드를 가리킴
+		p = p->rlink; //p가 다음 노드를 가리킴
+		free(prev); //p가 가리키는 노드의 전위 노드의 메모리 해제
 	}
 	free(h); //리스트의 맨 앞 노드의 메모리 해제
 	return 0; 
