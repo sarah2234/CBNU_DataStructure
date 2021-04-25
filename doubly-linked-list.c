@@ -146,22 +146,23 @@ int freeList(headNode* h) { //헤드 노드의 값을 변경해야하는 intialize와 달리 값�
 
 
 void printList(headNode* h) {
-	int i = 0;
-	listNode* p;
+	int i = 0; //순서를 나타내기 위해 i 선언 후 0으로 초기화
+	listNode* p; //리스트의 노드를 가리킬 포인터 p 선언
 
 	printf("\n---PRINT\n");
 
-	if (h == NULL) {
-		printf("Nothing to print....\n");
-		return;
+	if (h == NULL) { //리스트가 비어있을 때
+		printf("Nothing to print....\n"); //오류 메세지 출력
+		return; //함수 종료
 	}
 
-	p = h->first;
+	p = h->first; //p가 리스트의 맨 앞 노드를 가리키도록 초기화
 
-	while (p != NULL) {
-		printf("[ [%d]=%d ] ", i, p->key);
-		p = p->rlink;
-		i++;
+
+	while (p != NULL) { //p가 리스트의 맨 끝에 도달하기 전까지 반복
+		printf("[ [%d]=%d ] ", i, p->key); //i번째에 있는 노드의 key 값 출력
+		p = p->rlink; //p가 다음 노드를 가리킴
+		i++; //다음 번째로 변경
 	}
 
 	printf("  items = %d\n", i);
@@ -188,8 +189,8 @@ int insertLast(headNode* h, int key) {
 			temp = temp->rlink; //temp가 다음 노드를 가리킴
 		}
 		insert->rlink = NULL; //temp가 마지막 노드를 가리킬 때 while문 종료 후 insert의 rlink가 NULL을 가리켜  리스트의 끝을 알림
-		insert->llink = temp; //insert의 왼쪽에 temp 노드가 올 수 있도록 변경
-		temp->rlink = insert; //temp의 오른쪽에 insert 노드가 올 수 있도록 변경
+		insert->llink = temp; //insert의 왼쪽에 temp 노드가 오도록 함
+		temp->rlink = insert; //temp의 오른쪽에 insert 노드가 오도록 함
 		
 	}
 
@@ -230,10 +231,11 @@ int insertFirst(headNode* h, int key) {
 	listNode* insert = (listNode*)malloc(sizeof(listNode)); //입력받은 key 값을 삽입하기 위한 포인터 insert 선언 후 메모리 할당
 	insert->key = key; //입력받은 key 값을 insert의 key에 저장
 
-	insert->rlink = h->first; //insert의 오른쪽에 현재 리스트의 맨 앞 노드가 올 수 있도록 변경
+	insert->rlink = h->first; //insert의 오른쪽에 현재 리스트의 맨 앞 노드가 오도록 함
+	insert->llink = NULL; //insert 노드가 첫 번째 노드이므로 insert 왼쪽에는 NULL이 오도록 함
 	if (h->first) //리스트가 공백이 아닐 때 조건문 실행
 	{
-		h->first->llink = insert; //현재 리스트의 맨 앞 노드의 왼쪽에 insert가 올 수 있도록 변경
+		h->first->llink = insert; //현재 리스트의 맨 앞 노드의 왼쪽에 insert가 오도록 함
 	}
 	h->first = insert; //리스트의 맨 앞 노드를 insert가 가리키는 노드로 수정
 
@@ -261,9 +263,29 @@ int deleteFirst(headNode* h) {
 
 
 /**
- * 리스트의 링크를 역순으로 재 배치
+ * 리스트의 링크를 역순으로 재배치
  */
 int invertList(headNode* h) {
+	listNode* temp, * trail; //노드를 가리키는 temp 포인터와 temp의 전위 노드를 가리킬 trail 포인터 선언
+	temp = h->first; //temp가 리스트의 헤드 노드를 가리키도록 초기화
+	if (!h->first) //리스트가 비어있을 때
+	{
+		printf("List is empty!\n"); //오류 메세지 출력
+	}
+	else //리스트가 비어있지 않을 때
+	{
+		while (temp->rlink) //리스트 처음부터 끝에 도달하기 전까지 반복
+		{
+			trail = temp->llink; //trail이 temp의 전위 노드를 가리키도록 함
+			temp->llink = temp->rlink; //temp 노드의 왼쪽 링크가 후위 노드를 가리키도록 함
+			temp->rlink = trail; //temp 노드의 오른쪽 링크가 전위 노드를 가리키도록 하여 노드 간 순서 바꿈
+			temp = temp->llink; //temp는 그 다음 노드를 가리킴
+		}
+		//temp 노드는 기존의 리스트 순서를 기준으로 마지막 노드에 해당
+		temp->rlink = temp->llink; //temp 노드의 오른쪽 링크가 전위 노드를 가리키도록 함
+		temp->llink = NULL; //temp 노드는 현재 리스트의 헤드 노드가 되므로 왼쪽 링크는 NULL을 가리키도록 함
+		h->first = temp; //헤드 노드를 temp로 변경
+	}
 
 	return 0;
 }
@@ -285,10 +307,10 @@ int insertNode(headNode* h, int key) {
 		{
 			if (temp->key > insert->key) //입력받은 key보다 큰 값이 나오는 노드를 발견
 			{
-				insert->rlink = temp; //insert의 오른쪽에 temp가 올 수 있도록 변경
-				insert->llink = temp->llink;//insert의 왼쪽에 temp의 전위 노드가 올 수 있도록 변경
-				temp->llink->rlink = insert; //temp의 전위 노드 오른쪽에 insert가 올 수 있도록 변경 
-				temp->llink = insert; //temp의 왼쪽에 insert가 올 수 있도록 변경
+				insert->rlink = temp; //insert의 오른쪽에 temp가 올 수 있도록 배치
+				insert->llink = temp->llink;//insert의 왼쪽에 temp의 전위 노드가 오도록 함
+				temp->llink->rlink = insert; //temp의 전위 노드 오른쪽에 insert가 오도록 함
+				temp->llink = insert; //temp의 왼쪽에 insert가 오도록 함
 				return 0; //insert가 가리키는 노드를 리스트에 삽입하면 함수 종료
 			}
 			temp = temp->rlink; //temp가 다음 노드를 가리킴
