@@ -42,7 +42,7 @@ int freeList(headNode* h); //리스트의 모든 노드에 대해 메모리를 해제하는 freeLis
 int insertNode(headNode* h, int key); //리스트에 있는 노드들과 key 값을 비교하여 노드를 삽입하는 inserNode 함수 선언
 int insertLast(headNode* h, int key); ////리스트의 맨 끝에 노드를 삽입하는 insertLast 함수 선언
 int insertFirst(headNode* h, int key); //리스트의 맨 앞에 노드를 삽입하는 insertFirst 함수 선언
-int deleteNode(headNode* h, int key);
+int deleteNode(headNode* h, int key); //리스트에 있는 노드들과 key 값을 대조하여 노드를 삭제하는 deleteNode 함수 선언
 int deleteLast(headNode* h);
 int deleteFirst(headNode* h);
 int invertList(headNode* h);
@@ -278,6 +278,34 @@ int insertNode(headNode* h, int key) {
  * list에서 key에 대한 노드 삭제
  */
 int deleteNode(headNode* h, int key) {
+	listNode* temp = h->first; //삭제할 노드를 가리키는 포인터 temp 선언 후 리스트의 맨 앞을 가리키도록 초기화
+
+	if (!h->first) //리스트가 비어있을 때
+	{
+		printf("List is empty!\n"); //리스트가 비어있다는 오류 메세지 출력 
+	}
+	else if (temp->key == key)//삭제할 노드가 리스트의 맨 앞에 있을 때
+	{
+		deleteFirst(h); //리스트의 첫 번째 노드를 삭제하는 것과 같으므로 deleteFirst 함수 호출
+	}
+	else //리스트가 비어있지 않고 삭제할 노드가 리스트의 맨 앞에 있지 않을 때
+	{
+		while (temp->rlink) //temp의 후위 노드가 NULL, 즉 리스트의 끝에 도달하기 전까지 반복
+		{
+			if (temp->key == key) // temp의 key가 입력한 key와 같은 값을 가질 때
+			{
+				temp->llink->rlink = temp->rlink; //temp의 전위 노드의 rlink로 temp의 후위 노드가 전위 노드의 오른쪽에 올 수 있도록 변경
+				temp->rlink->llink = temp->llink; //temp의 후위 노드의 llink로 temp의 전위 노드가 후위 노드의 왼쪽에 올 수 있도록 변경
+				free(temp); //리스트에서 temp 노드 삭제 후 temp 메모리 해제
+				return 0; //temp가 가리키는 노드를 리스트에서 삭제하면 함수 종료
+			}
+			temp = temp->rlink; //temp가 다음 노드를 가리킴
+		}
+		if (temp->key == key) //마지막 노드의 key가 삭제하고자 하는 값일 때
+			deleteLast(h); //deleteLast 함수 호출로 마지막 노드 삭제
+		else //삭제하고자하는 값이 리스트에 존재하지 않을 때
+			printf("Node with the value %d not found!\n", key); //오류 메세지 출력
+	}
 
 	return 1;
 }
