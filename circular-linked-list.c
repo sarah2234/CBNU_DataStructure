@@ -242,8 +242,21 @@ int deleteFirst(listNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(listNode* h) {
-
-
+	listNode* temp, * trail; //노드를 가리키는 temp 포인터와 temp의 전위 노드를 가리킬 trail 포인터 선언
+	temp = h; //temp가 리스트의 헤드 노드를 가리키도록 초기화
+	if (h->rlink == h) //리스트가 비어있을 때
+	{
+		printf("List is empty!\n"); //오류 메세지 출력
+	}
+	else //리스트가 비어있지 않을 때
+	{
+		do { //반복문 최소 1번 이상 실행
+			trail = temp->llink; //trail이 temp의 왼쪽 노드를 가리킴
+			temp->llink = temp->rlink; //temp의 왼쪽 링크는 temp의 오른쪽 링크의 노드를 가리킴
+			temp->rlink = trail; //temp의 오른쪽 링크는 temp의 왼쪽 노드를 가리킴
+			temp = temp->llink; //temp가 다음 노드로 넘어감
+		} while (temp != h); //temp가 헤드 노드가 될 때 반복문 종료
+	}
 	return 0;
 }
 
@@ -272,7 +285,7 @@ int insertNode(listNode* h, int key) {
 				temp->llink = insert; //temp의 왼쪽 노드가 insert를 가리키면 (삽입 전 temp의 왼쪽 노드)-insert-temp 순으로 배치
 				return 0; //새 노드를 리스트에 삽입하면 함수 종료
 			}
-			temp = temp->rlink; //temp가 다음 노드를 가리킴
+			temp = temp->rlink; //입력받은 key보다 큰 값이 아니면 temp가 다음 노드를 가리킴
 		}
 		insertLast(h, key); //입력받은 key보다 큰 값을 리스트에서 찾지 못하면 insert 노드를 리스트의 끝에 배치
 	}
@@ -304,7 +317,7 @@ int deleteNode(listNode* h, int key) {
 				//노드를 리스트에서 삭제하면 함수 종료
 				return 0;
 			}
-			delete = delete->rlink;
+			delete = delete->rlink; //입력받은 key와 일치하지 않으면 delete는 다음 노드로 이동
 		}
 		printf("Node with the value %d not found!\n", key); //입력받은 key 값을 리스트에서 찾지 못하면 오류 메세지 출력
 	}
