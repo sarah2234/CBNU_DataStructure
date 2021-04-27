@@ -122,13 +122,13 @@ int initialize(listNode** h) {
 
 /* 메모리 해제 */
 int freeList(listNode* h) {
-	listNode* lastNode = h->llink; //마지막으로 메모리를 해제할 노드 lastNode 선언 후 리스트의 마지막 노드를 가리킴
-	while (h != lastNode) //마지막 노드를 가리키기 전까지 반복
+	listNode* temp = h; //메모리를 해제하고자하는 노드를 가리키는 temp 선언 후 리스트의 헤드 노드를 가리킴
+	while (temp->rlink != h) //마지막 노드를 가리키기 전까지 반복
 	{
-		h = h->rlink; //h는 다음 노드를 가리킴
-		free(h->llink); //이전 노드에 대해 메모리 해제
+		temp = temp->rlink; //temp는 다음 노드를 가리킴
+		free(temp); //메모리 해제
 	}
-	free(h); //마지막 노드의 메모리 해제
+	free(h); //헤드 노드의 메모리 해제
 	return 0;
 }
 
@@ -176,7 +176,7 @@ void printList(listNode* h) {
  * list에 key에 대한 노드하나를 추가
  */
 int insertLast(listNode* h, int key) {
-
+	
 	return 1;
 }
 
@@ -197,10 +197,10 @@ int deleteLast(listNode* h) {
 int insertFirst(listNode* h, int key) {
 	listNode* insert = (listNode*)malloc(sizeof(listNode)); //입력받은 key 값을 삽입하기 위한 포인터 insert 선언 후 메모리 할당
 	insert->key = key; //입력받은 key 값을 insert의 key에 저장
-	insert->rlink = h; //insert의 오른쪽 링크가 현재 리스트의 첫 번째 노드를 가리키도록 함
-	insert->llink = h->llink; //insert의 왼쪽 링크가 현재 리스트의 마지막 노드를 가리키도록 함
-	h->llink->rlink = insert; //리스트의 마지막 노드의 오른쪽 링크가 insert를 가리키도록 함
-	h->llink = insert; //리스트의 첫 번째 노드의 왼쪽 링크가 insert를 가리키면 insert의 삽입 완료
+	insert->llink = h; //insert의 왼쪽 링크가 현재 리스트의 헤드 노드를 가리키도록 함
+	insert->rlink = h->rlink; //insert의 오른쪽 링크가 헤드 노드의 오른쪽 링크가 가리키는 노드를 가리키도록 함
+	h->rlink->llink = insert; //헤드 노드를 제외한 첫 번째 노드의 왼쪽 링크가 insert를 가리키도록 함
+	h->rlink = insert; //헤드 노드의 오른쪽 링크가 insert를 가리키면 insert의 삽입 완료
 	return 1;
 }
 
