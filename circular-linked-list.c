@@ -15,34 +15,36 @@
  /* 필요한 헤더파일 추가 */
 
 typedef struct Node {
-	int key;
-	struct Node* llink;
-	struct Node* rlink;
-} listNode;
+	int key; //노드의 값을 저장하는 key 선언
+	struct Node* llink; //전위 노드를 가리키는 포인터형 llink 선언
+	struct Node* rlink; //후위 노드를 가리키는 포인터형 rlink 선언
+} listNode; //노드를 생성하기 위한 구조체 Node 선언 후 listNode로 재정의
 
 /* 함수 리스트 */
-int initialize(listNode** h);
-int freeList(listNode* h);
-int insertLast(listNode* h, int key);
-int deleteLast(listNode* h);
-int insertFirst(listNode* h, int key);
-int deleteFirst(listNode* h);
-int invertList(listNode* h);
+int initialize(listNode** h); //리스트를 생성하거나 초기화하는 intialize 함수 선언
+int freeList(listNode* h); //리스트의 모든 노드에 대해 메모리를 해제하는 freeList 함수 선언
+int insertLast(listNode* h, int key); //리스트의 마지막에 노드를 삽입하는 insertLast 함수 선언
+int deleteLast(listNode* h); //리스트의 마지막 노드를 삭제하는 deleteLast 함수 선언
+int insertFirst(listNode* h, int key); //리스트의 첫 번째에 노드를 삽입하는 insertFirst 함수 선언
+int deleteFirst(listNode* h); //리스트의 첫 번째 노드를 삭제하는 deleteFirst 함수 선언
+int invertList(listNode* h); //리스트의 순서를 역순으로 바꾸는 invertList 함수 선언
 
-int insertNode(listNode* h, int key);
-int deleteNode(listNode* h, int key);
+int insertNode(listNode* h, int key); //리스트에 있는 노드들과 key 값을 비교하여 노드를 삽입하는 inserNode 함수 선언
+int deleteNode(listNode* h, int key); //리스트에 있는 노드들과 key 값을 대조하여 노드를 삭제하는 deleteNode 함수 선언
 
-void printList(listNode* h);
+void printList(listNode* h); //리스트의 노드를 모두 출력하는 printList 함수 선언
 
 
 
 int main()
 {
-	char command;
-	int key;
-	listNode* headnode = NULL;
+	char command; //명령어를 입력받기 위한 command 변수 선언
+	int key; //값을 입력받기 위한 key 변수 선언
+	listNode* headnode = NULL; //리스트의 헤드 노드를 가리키는 포인터 headnode 선언 후 리스트 생성 전 NULL을 가리키도록 초기화
 
-	do {
+	printf("----- [이승현] [2020039075] -----\n");
+
+	do { //반복문 최소 1번 이상 실행
 		printf("----------------------------------------------------------------\n");
 		printf("                  Doubly Circular Linked List                   \n");
 		printf("----------------------------------------------------------------\n");
@@ -54,59 +56,59 @@ int main()
 		printf("----------------------------------------------------------------\n");
 
 		printf("Command = ");
-		scanf(" %c", &command);
+		scanf(" %c", &command); //명령어를 입력받아 command에 저장 
 
 		switch (command) {
-		case 'z': case 'Z':
-			initialize(&headnode);
+		case 'z': case 'Z': //command가 'z' 또는 'Z'일 때
+			initialize(&headnode); //intialize 함수 호출로 headnode에 메모리 할당하여 리스트 생성 (주소 전달로 함수 내에서 headnode의 값 변경)
 			break;
-		case 'p': case 'P':
-			printList(headnode);
+		case 'p': case 'P': //command가 'p' 또는 'P'일 때
+			printList(headnode); //printList 함수 호출로 리스트의 노드들을 출력
 			break;
-		case 'i': case 'I':
+		case 'i': case 'I': //command가 'i' 또는 'I'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			insertNode(headnode, key);
+			scanf("%d", &key); //삽입할 key 값 입력
+			insertNode(headnode, key); //insertNode 함수 호출로 headnode가 가리키는 곳부터 시작하여 노드 간 key 값을 비교하여 새로운 노드 삽입 
 			break;
-		case 'd': case 'D':
+		case 'd': case 'D': //command가 'd' 또는 'D'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			deleteNode(headnode, key);
+			scanf("%d", &key); //삭제할 key 값 입력
+			deleteNode(headnode, key); //deleteNode 함수 호출로 headnode가 가리키는 곳부터 시작하여 입력받은 key 값을 가진 노드 삭제
 			break;
-		case 'n': case 'N':
+		case 'n': case 'N': //command가 'n' 또는 'N'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			insertLast(headnode, key);
+			scanf("%d", &key); //삽입할 key 값 입력
+			insertLast(headnode, key); //insertLast 함수 호출로 headnode가 가리키는 곳부터 시작하여 리스트의 마지막에 새로운 노드 삽입
 			break;
-		case 'e': case 'E':
-			deleteLast(headnode);
+		case 'e': case 'E': //command가 'e' 또는 'E'일 때
+			deleteLast(headnode); //deleteLast 함수 호출로 headnode가 가리키는 곳부터 시작하여 리스트의 마지막 노드 삭제
 			break;
-		case 'f': case 'F':
+		case 'f': case 'F': //command가 'f' 또는 'F'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			insertFirst(headnode, key);
+			scanf("%d", &key); //삽입할 key 값 입력
+			insertFirst(headnode, key); //insertFirst 함수 호출로 headnode가 가리키는 리스트의 맨 앞에 새로운 노드 삽입
 			break;
-		case 't': case 'T':
-			deleteFirst(headnode);
+		case 't': case 'T': //command가 't' 또는 'T'일 때
+			deleteFirst(headnode); //deleteFirst 함수 호출로 headnode가 가리키는 리스트의 첫 번째 노드 삭제
 			break;
-		case 'r': case 'R':
-			invertList(headnode);
+		case 'r': case 'R': //command가 'r' 또는 'R'일 때
+			invertList(headnode); //invertList 함수 호출로 headnode가 가리키는 리스트의 노드들의 순서를 역순으로 변경
 			break;
-		case 'q': case 'Q':
-			freeList(headnode);
+		case 'q': case 'Q': //command가 'q' 또는 'Q'일 때
+			freeList(headnode); //freeList 함수 호출로 headnode가 가리키는 리스트의 노드들 메모리 해제
 			break;
-		default:
-			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
+		default: //command가 상단의 문자 이외의 값일 때
+			printf("\n       >>>>>   Concentration!!   <<<<<     \n"); //오류 메세지 출력
 			break;
 		}
 
-	} while (command != 'q' && command != 'Q');
+	} while (command != 'q' && command != 'Q'); //command에 'q' 또는 'Q'를 입력받으면 반복문 종료
 
 	return 1;
 }
 
 
-int initialize(listNode** h) {
+int initialize(listNode** h) { //이중 포인터 h로 헤드 노드의 주소를 받아 헤드 노드의 값을 함수 내에서 변경 가능
 
 	/* headNode가 NULL이 아니면, freeNode를 호출하여 할당된 메모리 모두 해제 */
 	if (*h != NULL)
