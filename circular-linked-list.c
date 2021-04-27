@@ -138,37 +138,37 @@ int freeList(listNode* h) {
 
 
 void printList(listNode* h) {
-	int i = 0;
-	listNode* p;
+	int i = 0; //순서를 나타내기 위해 i 선언 후 0으로 초기화
+	listNode* p; //리스트의 노드를 가리킬 포인터 p 선언
 
 	printf("\n---PRINT\n");
 
-	if (h == NULL) {
-		printf("Nothing to print....\n");
-		return;
+	if (h == NULL) { //리스트가 비어있을 때
+		printf("Nothing to print....\n"); //오류 메세지 출력
+		return; //함수 종료
 	}
 
-	p = h->rlink;
+	p = h->rlink; //p가 헤드 노드를 제외한 리스트의 첫 번째 노드를 가리키도록 초기화
 
-	while (p != NULL && p != h) {
-		printf("[ [%d]=%d ] ", i, p->key);
-		p = p->rlink;
-		i++;
+	while (p != NULL && p != h) { //p가 리스트의 마지막 노드에 도달하기 전까지 반복
+		printf("[ [%d]=%d ] ", i, p->key); //i번째에 있는 노드의 key 값 출력 
+		p = p->rlink; //p가 다음 노드를 가리킴
+		i++; //다음 번째로 변경
 	}
-	printf("  items = %d\n", i);
+	printf("  items = %d\n", i); //노드의 총 갯수 출력
 
 
 	/* print addresses */
 	printf("\n---checking addresses of links\n");
 	printf("-------------------------------\n");
-	printf("head node: [llink]=%p, [head]=%p, [rlink]=%p\n", h->llink, h, h->rlink);
+	printf("head node: [llink]=%p, [head]=%p, [rlink]=%p\n", h->llink, h, h->rlink); //헤드 노드의 llink, 주소, rlink를 차례로 출력
 
 	i = 0;
-	p = h->rlink;
-	while (p != NULL && p != h) {
-		printf("[ [%d]=%d ] [llink]=%p, [node]=%p, [rlink]=%p\n", i, p->key, p->llink, p, p->rlink);
-		p = p->rlink;
-		i++;
+	p = h->rlink; //p가 헤드 노드를 제외한 리스트의 첫 번째 노드를 가리킴
+	while (p != NULL && p != h) { //p가 리스트의 마지막 노드에 도달하기 전까지 반복
+		printf("[ [%d]=%d ] [llink]=%p, [node]=%p, [rlink]=%p\n", i, p->key, p->llink, p, p->rlink); //i번째에 있는 노드의 key, llink, rlink를 차례로 출력
+		p = p->rlink; //p가 다음 노드를 가리킴
+		i++; //다음 번째로 변경
 	}
 
 }
