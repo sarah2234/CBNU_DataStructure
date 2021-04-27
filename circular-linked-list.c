@@ -284,7 +284,30 @@ int insertNode(listNode* h, int key) {
  * list에서 key에 대한 노드 삭제
  */
 int deleteNode(listNode* h, int key) {
-
+	listNode* delete = h->rlink; //노드를 삭제하기 위한 포인터 delete 선언 후 헤드 노드를 제외한 첫 번째 노드를 가리키도록 초기화
+	if (h->rlink == h) //리스트가 비어있을 때
+	{
+		printf("List is empty!\n"); //리스트가 비어있다는 오류 메세지 출력
+	}
+	else //리스트가 비어있지 않을 때
+	{
+		while (delete != h) //delete 노드가 마지막 노드와 비교 완료 할 때까지 반복
+		{
+			if (delete->key == key) //key 값과 delete의 key 값이 동일할 때
+			{
+				//delete의 왼쪽 노드의 오른쪽 링크가 delete의 오른쪽 노드를 가리킴
+				delete->llink->rlink = delete->rlink;
+				//delete의 오른쪽 노드의 왼쪽 링크가 delete의 왼쪽 노드를 가리키면 (삭제 전 delete의 왼쪽 노드)-(삭제 전 delete의 오른쪽 노드) 순으로 배치
+				delete->rlink->llink = delete->llink; 
+				//delete가 가리키는 노드의 메모리 해제
+				free(delete);
+				//노드를 리스트에서 삭제하면 함수 종료
+				return 0;
+			}
+			delete = delete->rlink;
+		}
+		printf("Node with the value %d not found!\n", key); //입력받은 key 값을 리스트에서 찾지 못하면 오류 메세지 출력
+	}
 	return 0;
 }
 
