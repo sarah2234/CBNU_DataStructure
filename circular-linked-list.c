@@ -191,8 +191,17 @@ int insertLast(listNode* h, int key) {
  * list의 마지막 노드 삭제
  */
 int deleteLast(listNode* h) {
-
-
+	if (h->rlink == h) //리스트가 비어있을 때
+	{
+		printf("List is empty!\n"); //리스트가 비어있다는 오류 메세지 출력
+	}
+	else //리스트가 비어있지 않을 때
+	{
+		listNode* delete = h->llink; //노드를 삭제하기 위한 포인터 delete 선언 후 마지막 노드를 가리키도록 초기화
+		delete->llink->rlink = h; //delete의 왼쪽 노드의 오른쪽 링크가 헤드 노드를 가리킴
+		h->llink = delete->llink; //헤드 노드의 왼쪽 링크가 delete의 왼쪽 노드를 가리키면 (삭제 전 delete의 왼쪽 노드)-h 순으로 배치
+		free(delete); //delete가 가리키는 노드의 메모리 해제
+	}
 	return 1;
 }
 
