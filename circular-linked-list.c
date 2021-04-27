@@ -182,8 +182,7 @@ int insertLast(listNode* h, int key) {
 	insert->llink = h->llink; //insert의 왼쪽 링크가 리스트의 마지막 노드를 가리킴
 	insert->rlink = h; //insert의 오른쪽 링크가 헤드 노드를 가리킴
 	h->llink->rlink = insert; //리스트의 마지막 노드의 오른쪽 링크가 insert를 가리킴
-	h->llink = insert; //헤드 노드의 왼쪽 링크가 insert를 가리키면 (삽입 전 마지막 노드)-insert-h 순으로 배치 완료
-	//freelist 오류
+	h->llink = insert; //헤드 노드의 왼쪽 링크가 insert를 가리키면 (삽입 전 마지막 노드)-insert-h 순으로 배치
 	return 1;
 }
 
@@ -207,7 +206,7 @@ int insertFirst(listNode* h, int key) {
 	insert->llink = h; //insert의 왼쪽 링크가 리스트의 헤드 노드를 가리키도록 함
 	insert->rlink = h->rlink; //insert의 오른쪽 링크가 헤드 노드를 제외한 첫 번째 노드를 가리키도록 함
 	h->rlink->llink = insert; //헤드 노드를 제외한 첫 번째 노드의 왼쪽 링크가 insert를 가리키도록 함
-	h->rlink = insert; //헤드 노드의 오른쪽 링크가 insert를 가리키면 h-insert-(삽입 전 h의 왼쪽 노드) 순으로 배치 완료
+	h->rlink = insert; //헤드 노드의 오른쪽 링크가 insert를 가리키면 h-insert-(삽입 전 h의 왼쪽 노드) 순으로 배치
 	return 1;
 }
 
@@ -215,10 +214,18 @@ int insertFirst(listNode* h, int key) {
  * list의 첫번째 노드 삭제
  */
 int deleteFirst(listNode* h) {
-
-
+	if (h->rlink == h) //리스트가 비어있을 때
+	{
+		printf("List is empty!\n"); //리스트가 비어있다는 오류 메세지 출력
+	}
+	else //리스트가 비어있지 않을 때
+	{
+		listNode* delete = h->rlink; //노드를 삭제하기 위한 포인터 delete 선언 후 헤드 노드를 제외한 첫 번째 노드를 가리키도록 초기화
+		delete->rlink->llink = h;  //delete의 오른쪽 노드의 왼쪽 링크가 헤드 노드를 가리킴
+		h->rlink = delete->rlink; //헤드 노드의 오른쪽 링크가 delete의 오른쪽 노드를 가리키면 h-(삭제 전 delete의 오른쪽 노드) 순으로 배치
+		free(delete); //delete가 가리키는 노드의 메모리 해제
+	}
 	return 1;
-
 }
 
 
@@ -253,7 +260,7 @@ int insertNode(listNode* h, int key) {
 				insert->llink = temp->llink; //insert의 왼쪽 링크가 temp의 왼쪽 노드를 가리킴
 				insert->rlink = temp; //insert의 오른쪽 링크가 temp를 가리킴
 				temp->llink->rlink = insert; //temp의 왼쪽 노드의 오른쪽 링크가 insert를 가리킴
-				temp->llink = insert; //temp의 왼쪽 노드가 insert를 가리키면 (삽입 전 temp의 왼쪽 노드)-insert-temp 순으로 배치 완료
+				temp->llink = insert; //temp의 왼쪽 노드가 insert를 가리키면 (삽입 전 temp의 왼쪽 노드)-insert-temp 순으로 배치
 				return 0; //새 노드를 리스트에 삽입하면 함수 종료
 			}
 			temp = temp->rlink; //temp가 다음 노드를 가리킴
