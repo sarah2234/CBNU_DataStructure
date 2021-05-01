@@ -13,8 +13,8 @@
 
 typedef struct node {
 	int key;
-	struct node *left;
-	struct node *right;
+	struct node* left;
+	struct node* right;
 } Node;
 
 int initializeBST(Node** h);
@@ -39,7 +39,7 @@ int main()
 	Node* head = NULL;
 	Node* ptr = NULL;	/* temp */
 
-	do{
+	do {
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
 		printf("                   Binary Search Tree #1                        \n");
@@ -54,7 +54,7 @@ int main()
 		printf("Command = ");
 		scanf(" %c", &command);
 
-		switch(command) {
+		switch (command) {
 		case 'z': case 'Z':
 			initializeBST(&head);
 			break;
@@ -75,7 +75,7 @@ int main()
 			printf("Your Key = ");
 			scanf("%d", &key);
 			ptr = searchIterative(head, key);
-			if(ptr != NULL)
+			if (ptr != NULL)
 				printf("\n node [%d] found at %p\n", ptr->key, ptr);
 			else
 				printf("\n Cannot find the node [%d]\n", key);
@@ -84,7 +84,7 @@ int main()
 			printf("Your Key = ");
 			scanf("%d", &key);
 			ptr = searchRecursive(head->left, key);
-			if(ptr != NULL)
+			if (ptr != NULL)
 				printf("\n node [%d] found at %p\n", ptr->key, ptr);
 			else
 				printf("\n Cannot find the node [%d]\n", key);
@@ -104,7 +104,7 @@ int main()
 			break;
 		}
 
-	}while(command != 'q' && command != 'Q');
+	} while (command != 'q' && command != 'Q');
 
 	return 1;
 }
@@ -112,7 +112,7 @@ int main()
 int initializeBST(Node** h) {
 
 	/* if the tree is not empty, then remove all allocated nodes from the tree*/
-	if(*h != NULL)
+	if (*h != NULL)
 		freeBST(*h);
 
 	/* create a head node */
@@ -125,9 +125,9 @@ int initializeBST(Node** h) {
 
 
 
-void inorderTraversal(Node* ptr) 
+void inorderTraversal(Node* ptr)
 {
-	if(ptr){ //더 이상 진행할 수 없을 때까지 recursive 방식으로 함수 호출
+	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
 		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
 		printf("%d", ptr->key); //해당 노드 방문
 		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
@@ -166,10 +166,16 @@ Node* searchIterative(Node* head, int key)
 }
 
 
-int freeBST(Node* head)
+int freeBST(Node* head) //호위 순회 방식으로 메모리 해제
 {
-
+	if (head) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
+		freeBST(head->left); //왼쪽 자식 노드로 이동
+		if(head!=head->right) //재검토 요망!
+			freeBST(head->right); //방문 후 오른쪽 자식 노드로 이동
+		free(head); //해당 노드에 대한 메모리 해제
+	}
 }
+
 
 
 
