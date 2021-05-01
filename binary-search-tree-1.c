@@ -136,12 +136,20 @@ void inorderTraversal(Node* ptr)
 
 void preorderTraversal(Node* ptr)
 {
-
+	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
+		printf("%d", ptr->key); //해당 노드 방문
+		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
+		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
+	}
 }
 
 void postorderTraversal(Node* ptr)
 {
-
+	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
+		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
+		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
+		printf("%d", ptr->key); //해당 노드 방문
+	}
 }
 
 
