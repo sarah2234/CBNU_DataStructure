@@ -155,7 +155,24 @@ void postorderTraversal(Node* ptr)
 
 int insert(Node* head, int key)
 {
-
+	Node insertKey;
+	insertKey.key = key;
+	insertKey.left = NULL;
+	insertKey.right = NULL;
+	if (head->left == NULL)
+	{
+		head->left = &insertKey;
+	}
+	else if (head->right == NULL)
+	{
+		head->right = &insertKey;
+	}
+	else
+	{
+		head = head->left;
+		insert(head, key);
+	}
+	return 0;
 }
 
 int deleteLeafNode(Node* head, int key)
