@@ -140,16 +140,16 @@ void preorderTraversal(Node* ptr)
 {
 	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
 		printf("[%d] ", ptr->key); //해당 노드 방문
-		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
-		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
+		preorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
+		preorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
 	}
 }
 
 void postorderTraversal(Node* ptr)
 {
 	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
-		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
-		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
+		postorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
+		postorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
 		printf("[%d] ", ptr->key); //해당 노드 방문
 	}
 }
@@ -216,11 +216,12 @@ Node* searchIterative(Node* head, int key)
 }
 
 
-int freeBST(Node* head) //호위 순회 방식으로 메모리 해제
+int freeBST(Node* head) //후위 순회 방식으로 메모리 해제
 {
-	if (head) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
+	if (head) 
+	{ //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
 		freeBST(head->left); //왼쪽 자식 노드로 이동
-		if(head!=head->right) //재검토 요망!
+		if (head!=head->right) //헤드 노드가 아닐 때 (헤드 노드의 오른쪽 링크는 자기 자신을 가리킴)
 			freeBST(head->right); //방문 후 오른쪽 자식 노드로 이동
 		free(head); //해당 노드에 대한 메모리 해제
 	}
