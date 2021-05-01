@@ -39,6 +39,8 @@ int main()
 	Node* head = NULL;
 	Node* ptr = NULL;	/* temp */
 
+	printf("----- [이승현] [2020039075] -----\n");
+
 	do {
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
@@ -129,7 +131,7 @@ void inorderTraversal(Node* ptr)
 {
 	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
 		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
-		printf("%d", ptr->key); //해당 노드 방문
+		printf("[%d] ", ptr->key); //해당 노드 방문
 		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
 	}
 }
@@ -137,7 +139,7 @@ void inorderTraversal(Node* ptr)
 void preorderTraversal(Node* ptr)
 {
 	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
-		printf("%d", ptr->key); //해당 노드 방문
+		printf("[%d] ", ptr->key); //해당 노드 방문
 		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
 		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
 	}
@@ -148,35 +150,52 @@ void postorderTraversal(Node* ptr)
 	if (ptr) { //더 이상 이동할 수 없을 때까지 recursive 방식으로 함수 호출
 		inorderTraversal(ptr->left); //왼쪽 자식 노드로 이동
 		inorderTraversal(ptr->right); //방문 후 오른쪽 자식 노드로 이동
-		printf("%d", ptr->key); //해당 노드 방문
+		printf("[%d] ", ptr->key); //해당 노드 방문
 	}
 }
 
 
 int insert(Node* head, int key)
 {
-	if (head->left == NULL)
+	Node* insertNode = (Node*)malloc(sizeof(Node)); //새로운 노드를 삽입하기 위한 포인터 insertNode 선언 후 메모리 할당 
+	insertNode->key = key; //삽입하고자하는 값을 insertNode의 key에 저장
+	insertNode->left = NULL; //insertNode는 리프 노드이므로 왼쪽 링크는 NULL을 가리킴
+	insertNode->right = NULL; //insertNode는 리프 노드이므로 오른쪽 링크는 NULL을 가리킴
+
+	if (head->right == head) //head가 루트 노드를 가리키는 포인터일 때
 	{
-		Node* insertKey = (Node*)malloc(sizeof(Node));
-		insertKey->key = key;
-		insertKey->left = NULL;
-		insertKey->right = NULL;
-		head->left = insertKey;
-		return 0;
+		if (head->left == NULL) //루트 노드가 트리에 존재하지 않을 때
+		{
+			head->left = insertNode; //루트 노드로서 insertNode 노드 삽입
+			return 0; //삽입 후 종료
+		}
+		else //루트 노드가 트리에 존재할 때
+		{
+			head = head->left; //head를 head의 왼쪽 노드로 변경 (temp로 이름을 바꾸기 위한 작업)
+		}
 	}
-	else if (head->right == NULL)
+	//이곳까지 왔을 때 함수가 아직 종료되지 않았다면 헤드 노드 이외의 노드를 조사해야하므로 변수의 명칭을 head에서 temp로 변경
+	Node* temp = head; //현재 조사하고자 하는 노드를 가리키는 포인터 temp 선언 후 head 값으로 초기화 
+
+	if (temp->key > key) //temp의 key가 삽입하려는 값보다 클 때 temp의 왼쪽 조사
 	{
-		Node* insertKey = (Node*)malloc(sizeof(Node));
-		insertKey->key = key;
-		insertKey->left = NULL;
-		insertKey->right = NULL;
-		head->right = insertKey;
-		return 0;
+		if (temp->left == NULL) //temp의 왼쪽에 노드가 존재하지 않을 때
+		{
+			temp->left = insertNode; //temp의 왼쪽에 새로운 노드 삽입
+			return 0; //삽입 후 함수 종료
+		}
+		else //temp의 왼쪽에 노드가 존재할 때
+			insert(temp->left, key); //temp의 왼쪽 서브트리 조사
 	}
-	else
+	else //temp의 key가 삽입하려는 값보다 크지 않을 때 temp의 오른쪽 조사
 	{
-		insert(head->left, key);
-		insert(head->right, key);
+		if (temp->right == NULL) //temp의 오른쪽에 노드가 존재하지 않을 때
+		{
+			temp->right = insertNode; //temp의 오른쪽에 새로운 노드 삽입
+			return 0; //삽입 후 함수 종료
+		}
+		else //temp의 오른쪽에 노드가 존재할 때
+			insert(temp->right, key); //temp의 오른쪽 서브트리 조사
 	}
 	return 0;
 }
