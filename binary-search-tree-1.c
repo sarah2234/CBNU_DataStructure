@@ -155,22 +155,28 @@ void postorderTraversal(Node* ptr)
 
 int insert(Node* head, int key)
 {
-	Node insertKey;
-	insertKey.key = key;
-	insertKey.left = NULL;
-	insertKey.right = NULL;
 	if (head->left == NULL)
 	{
-		head->left = &insertKey;
+		Node* insertKey = (Node*)malloc(sizeof(Node));
+		insertKey->key = key;
+		insertKey->left = NULL;
+		insertKey->right = NULL;
+		head->left = insertKey;
+		return 0;
 	}
 	else if (head->right == NULL)
 	{
-		head->right = &insertKey;
+		Node* insertKey = (Node*)malloc(sizeof(Node));
+		insertKey->key = key;
+		insertKey->left = NULL;
+		insertKey->right = NULL;
+		head->right = insertKey;
+		return 0;
 	}
 	else
 	{
-		head = head->left;
-		insert(head, key);
+		insert(head->left, key);
+		insert(head->right, key);
 	}
 	return 0;
 }
