@@ -284,21 +284,19 @@ int deleteLeafNode(Node* head, int key)
 
 
 
-Node* searchRecursive(Node* ptr, int key)
+Node* searchRecursive(Node* ptr, int key) //찾고자하는 값을 가진 노드가 존재할 때 해당 노드의 주소가 마지막에 반환되어야 하므로 후위 순회 방식 사용
 {	
 	if (ptr) //ptr이 NULL이 아닐 때
 	{
+		searchRecursive(ptr->left, key); //ptr의 왼쪽 서브 트리 조사
+		searchRecursive(ptr->right, key); //ptr의 오른쪽 서브 트리 조사
+
 		if (ptr->key == key) //ptr의 key 값이 찾고자하는 값과 일치할 때
 		{
 			return ptr; //ptr을 반환하면서 함수 종료
 		}
-		else //값을 아직 찾지 못하였을 때
-		{
-			searchRecursive(ptr->left, key); //ptr의 왼쪽 서브 트리 조사
-			searchRecursive(ptr->right, key); //ptr의 오른쪽 서브 트리 조사
-		}
 	}
-	else //ptr이 NULL일 때
+	else //ptr이 NULL일 때, 즉 값을 찾지 못하였을 때
 	{
 		return NULL; //NULL을 반환하면서 함수 종료
 	}
