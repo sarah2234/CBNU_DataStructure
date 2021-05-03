@@ -12,12 +12,12 @@
 #include <stdlib.h>
 
 typedef struct node {
-	int key;
-	struct node* left;
-	struct node* right;
-} Node;
+	int key; //노드의 값을 저장하는 key 선언
+	struct node* left; //왼쪽 자식 노드를 가리키는 포인터 left 선언
+	struct node* right; //오른쪽 노드를 가리키는 포인터 right 선언
+} Node; //노드를 생성하기 위한 구조체 node 선언 후 Node로 재정의
 
-int initializeBST(Node** h);
+int initializeBST(Node** h); //트리를 초기화하는 intializeBST 함수 선언
 
 /* functions that you have to implement */
 void inorderTraversal(Node* ptr);	  /* recursive inorder traversal */
@@ -34,14 +34,14 @@ int freeBST(Node* head); /* free all memories allocated to the tree */
 
 int main()
 {
-	char command;
-	int key;
-	Node* head = NULL;
+	char command; //명령어를 입력받기 위한 command 변수 선언
+	int key; //값을 입력받기 위한 key 변수 선언
+	Node* head = NULL; //트리의 헤드 노드를 가리키는 포인터 head 선언 후 트리 생성 전 NULL을 가리키도록 초기화
 	Node* ptr = NULL;	/* temp */
 
 	printf("----- [이승현] [2020039075] -----\n");
 
-	do {
+	do { //반복문 최소 1번 이상 실행
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
 		printf("                   Binary Search Tree #1                        \n");
@@ -54,59 +54,59 @@ int main()
 		printf("----------------------------------------------------------------\n");
 
 		printf("Command = ");
-		scanf(" %c", &command);
+		scanf(" %c", &command); //명령어를 입력받아 command에 저장
 
 		switch (command) {
-		case 'z': case 'Z':
-			initializeBST(&head);
+		case 'z': case 'Z': //command가 'z' 또는 'Z'일 때
+			initializeBST(&head); //head에 메모리 할당하여 트리 생성
 			break;
-		case 'q': case 'Q':
-			freeBST(head);
+		case 'q': case 'Q': //command가 'q' 또는 'Q'일 때
+			freeBST(head); //트리의 노드들 메모리 해제
 			break;
-		case 'n': case 'N':
+		case 'n': case 'N': //command가 'n' 또는 'N'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			insert(head, key);
+			scanf("%d", &key); //삽입할 값 입력
+			insert(head, key); //트리에 해당 값을 가진 노드 삽입
 			break;
-		case 'd': case 'D':
+		case 'd': case 'D': //command가 'd' 또는 'D'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			deleteLeafNode(head, key);
+			scanf("%d", &key); //삭제할 값 입력
+			deleteLeafNode(head, key); //트리에서 해당 값을 가진 노드 삭제
 			break;
-		case 'f': case 'F':
+		case 'f': case 'F': //command가 'f' 또는 'F'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			ptr = searchIterative(head, key);
-			if (ptr != NULL)
-				printf("\n node [%d] found at %p\n", ptr->key, ptr);
-			else
-				printf("\n Cannot find the node [%d]\n", key);
+			scanf("%d", &key); //검색할 값 입력
+			ptr = searchIterative(head, key); //트리에서 해당 값을 가진 노드를 반복법으로 검색하여 결과를 ptr에 저장
+			if (ptr != NULL) //트리에 해당 노드가 존재할 때
+				printf("\n node [%d] found at %p\n", ptr->key, ptr); //ptr의 key 값과 주소 출력
+			else //트리에 해당 노드가 존재하지 않을 때
+				printf("\n Cannot find the node [%d]\n", key); //오류 메세지 출력
 			break;
-		case 's': case 'S':
+		case 's': case 'S': //command가 's' 또는 'S'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			ptr = searchRecursive(head->left, key);
-			if (ptr != NULL)
-				printf("\n node [%d] found at %p\n", ptr->key, ptr);
-			else
-				printf("\n Cannot find the node [%d]\n", key);
+			scanf("%d", &key); //검색할 값 입력
+			ptr = searchRecursive(head->left, key); //트리에서 해당 값을 가진 노드를 순환법으로 검색하여 결과를 ptr에 저장
+			if (ptr != NULL) //트리에 해당 노드가 존재할 때
+				printf("\n node [%d] found at %p\n", ptr->key, ptr); //ptr의 key 값과 주소 출력
+			else //트리에 해당 노드가 존재하지 않을 때
+				printf("\n Cannot find the node [%d]\n", key); //오류 메세지 출력
 			break;
 
-		case 'i': case 'I':
-			inorderTraversal(head->left);
+		case 'i': case 'I': //command가 'i' 또는 'I'일 때
+			inorderTraversal(head->left); //중위 순회 방식으로 노드 출력
 			break;
-		case 'p': case 'P':
-			preorderTraversal(head->left);
+		case 'p': case 'P': //command가 'p' 또는 'P'일 때
+			preorderTraversal(head->left); //전위 순회 방식으로 노드 출력
 			break;
-		case 't': case 'T':
-			postorderTraversal(head->left);
+		case 't': case 'T': //command가 't' 또는 'T'일 때
+			postorderTraversal(head->left); //후위 순회 방식으로 노드 출력
 			break;
-		default:
-			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
+		default: //command가 상단의 문자 이외의 값일 때
+			printf("\n       >>>>>   Concentration!!   <<<<<     \n"); //오류 메세지 출력
 			break;
 		}
 
-	} while (command != 'q' && command != 'Q');
+	} while (command != 'q' && command != 'Q'); //command에 'q' 또는 'Q'를 입력받으면 반복문 종료
 
 	return 1;
 }
@@ -284,22 +284,23 @@ int deleteLeafNode(Node* head, int key)
 
 
 
-Node* searchRecursive(Node* ptr, int key) //찾고자하는 값을 가진 노드가 존재할 때 해당 노드의 주소가 마지막에 반환되어야 하므로 후위 순회 방식 사용
+Node* searchRecursive(Node* ptr, int key)
 {	
+	Node* leftResult = NULL; //왼쪽 서브 트리의 결과를 저장할 포인터 leftResult 선언 후 NULL로 초기화
+	Node* rightResult = NULL; //오른쪽 서브 트리의 결과를 저장할 포인터 RighttResult 선언 후 NULL로 초기화
+	Node* finalResult = NULL; //최종 결과를 저장할 포인터 finalResult 선언 후 NULL로 초기화
 	if (ptr) //ptr이 NULL이 아닐 때
 	{
-		searchRecursive(ptr->left, key); //ptr의 왼쪽 서브 트리 조사
-		searchRecursive(ptr->right, key); //ptr의 오른쪽 서브 트리 조사
-
 		if (ptr->key == key) //ptr의 key 값이 찾고자하는 값과 일치할 때
 		{
 			return ptr; //ptr을 반환하면서 함수 종료
 		}
+
+		leftResult = searchRecursive(ptr->left, key); //ptr의 왼쪽 서브 트리 조사
+		rightResult = searchRecursive(ptr->right, key); //ptr의 오른쪽 서브 트리 조사
 	}
-	else //ptr이 NULL일 때, 즉 값을 찾지 못하였을 때
-	{
-		return NULL; //NULL을 반환하면서 함수 종료
-	}
+	finalResult = (leftResult != NULL) ? leftResult : rightResult; //leftResult가 NULL이 아니면 finalResult에 leftResult를 저장, NULL이면 rightResult를 저장
+	return finalResult; //최종 결과인 finalResult 반환하면서 함수 종료
 }
 
 Node* searchIterative(Node* head, int key)
