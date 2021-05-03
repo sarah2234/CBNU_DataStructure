@@ -292,8 +292,11 @@ Node* searchRecursive(Node* ptr, int key)
 		{
 			return ptr; //ptr을 반환하면서 함수 종료
 		}
-		searchRecursive(ptr->left, key); //값을 아직 찾지 못하면 ptr의 왼쪽 서브 트리 조사
-		searchRecursive(ptr->right, key); //값을 아직 찾지 못하면 ptr의 오른쪽 서브 트리 조사
+		else //값을 아직 찾지 못하였을 때
+		{
+			searchRecursive(ptr->left, key); //ptr의 왼쪽 서브 트리 조사
+			searchRecursive(ptr->right, key); //ptr의 오른쪽 서브 트리 조사
+		}
 	}
 	else //ptr이 NULL일 때
 	{
@@ -303,7 +306,19 @@ Node* searchRecursive(Node* ptr, int key)
 
 Node* searchIterative(Node* head, int key)
 {
-
+	Node* search = head->left; //노드를 찾기 위한 포인터 search 선언 후 루트 노드를 가리키도록 초기화
+	Node* temp = head->left; //현재 조사하고자 하는 노드를 가리키는 포인터 temp 선언 후 루트 노드를 가리키도록 초기화 
+	for (; search; search = search->right) //search가 오른쪽 노드로 이동하면서 NULL이 될 때까지 반복
+	{
+		for (temp = search; temp; temp = temp->left) //temp는 search 노드부터 시작하여 왼쪽으로 이동하면서 NULL이 될 때까지 key 값 검사 반복
+		{
+			if (temp->key == key) //temp의 key 값이 찾고자하는 값과 일치할 때
+			{
+				return temp; //temp를 반환하면서 함수 종료
+			}
+		}
+	}
+	return NULL; //값을 찾지 못하였을 경우 NULL을 반환하면서 함수 종료
 }
 
 
