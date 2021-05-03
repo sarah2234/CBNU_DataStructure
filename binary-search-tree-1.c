@@ -162,7 +162,7 @@ int insert(Node* head, int key)
 	insertNode->left = NULL; //insertNode는 리프 노드이므로 왼쪽 링크는 NULL을 가리킴
 	insertNode->right = NULL; //insertNode는 리프 노드이므로 오른쪽 링크는 NULL을 가리킴
 
-	if (head->right == head) //head가 루트 노드를 가리키는 포인터일 때
+	if (head->right == head) //head가 헤드 노드를 가리키는 포인터일 때
 	{
 		if (head->left == NULL) //루트 노드가 트리에 존재하지 않을 때
 		{
@@ -171,40 +171,40 @@ int insert(Node* head, int key)
 		}
 		else //루트 노드가 트리에 존재할 때
 		{
-			head = head->left; //head를 head의 왼쪽 노드로 변경 (temp로 이름을 바꾸기 위한 작업)
+			head = head->left; //head를 루트 노드로 변경 (temp로 이름을 바꾸기 위한 작업)
 		}
 	}
 	
 	Node* temp = head; //현재 조사하고자 하는 노드를 가리키는 포인터 temp 선언 후 head 값으로 초기화 
 
-	if (temp->key > key) //temp의 key가 삽입하려는 값보다 클 때 temp의 왼쪽 조사
+	if (temp->key > key) //temp의 key가 삽입하려는 값보다 클 때 temp의 왼쪽 서브 트리 조사
 	{
-		if (temp->left == NULL) //temp의 왼쪽에 노드가 존재하지 않을 때
+		if (temp->left == NULL) //temp의 왼쪽 자식 노드가 존재하지 않을 때
 		{
-			temp->left = insertNode; //temp의 왼쪽에 새로운 노드 삽입
+			temp->left = insertNode; //temp의 왼쪽 자식 노드로 새로운 노드 삽입
 			return 0; //삽입 후 함수 종료
 		}
-		else //temp의 왼쪽에 노드가 존재할 때
-			insert(temp->left, key); //temp의 왼쪽 서브트리 조사
+		else //temp의 왼쪽 자식 노드가 존재할 때
+			insert(temp->left, key); //temp의 왼쪽 서브 트리 조사
 	}
-	else //temp의 key가 삽입하려는 값보다 크지 않을 때 temp의 오른쪽 조사
+	else //temp의 key가 삽입하려는 값보다 크지 않을 때 temp의 오른쪽 서브 트리 조사
 	{
-		if (temp->right == NULL) //temp의 오른쪽에 노드가 존재하지 않을 때
+		if (temp->right == NULL) //temp의 오른쪽 자식 노드가 존재하지 않을 때
 		{
-			temp->right = insertNode; //temp의 오른쪽에 새로운 노드 삽입
+			temp->right = insertNode; //temp의 오른쪽 자식 새로운 노드 삽입
 			return 0; //삽입 후 함수 종료
 		}
-		else //temp의 오른쪽에 노드가 존재할 때
-			insert(temp->right, key); //temp의 오른쪽 서브트리 조사
+		else //temp의 오른쪽 자식 노드가 존재할 때
+			insert(temp->right, key); //temp의 오른쪽 서브 트리 조사
 	}
 	return 0;
 }
 
 int deleteLeafNode(Node* head, int key)
-{//head가 헤드 노드일 때와 헤드 노드가 아닐 때를 구분
+{
 	if (head->right == head)//head가 헤드 노드일 때
 	{
-		Node* root = head->left; //루트 노드를 가리킬 포인터 root 선언 후 head의 왼쪽 노드로 초기화
+		Node* root = head->left; //루트 노드를 가리킬 포인터 root 선언 후 head->left로 초기화
 		if (root == NULL) //루트 노드가 존재하지 않을 때
 		{
 			printf("The node [%d] does not exist.\n\n", key); //오류 메세지 출력
@@ -226,51 +226,51 @@ int deleteLeafNode(Node* head, int key)
 	}
 
 	Node* temp = head; //삭제하고자하는 노드의 부모 노드를 가리키는 포인터 temp 선언 후 head 값으로 초기화 
-	Node* tempLeft = temp->left; //temp의 왼쪽 노드를 가리키는 포인터 tempLeft 선언 후 temp->left로 초기화
-	Node* tempRight = temp->right; //temp의 오른쪽 노드를 가리키는 포인터 tempRight 선언 후 temp->right로 초기화
+	Node* tempLeft = temp->left; //temp의 왼쪽 자식 노드를 가리키는 포인터 tempLeft 선언 후 temp->left로 초기화
+	Node* tempRight = temp->right; //temp의 오른쪽 자식 노드를 가리키는 포인터 tempRight 선언 후 temp->right로 초기화
 
 	if ((temp->key > key) & (tempLeft != NULL)) //삭제하고자하는 값보다 temp의 key값이 더 크고 temp의 왼쪽 서브 트리가 존재할 때
 	{
 		if ((tempLeft->left == NULL) & (tempLeft->right == NULL) & (tempLeft->key == key)) //왼쪽 노드가 삭제하고자하는 값을 가지면서 리프 노드일 때
 		{
-			free(tempLeft); //왼쪽 노드의 메모리 해제
+			free(tempLeft); //왼쪽 자식 노드의 메모리 해제
 			temp->left = NULL; //temp의 왼쪽 링크는 NULL을 가리킴
 			return 0; //함수 종료
 		}
-		else if((tempLeft->left == NULL) & (tempLeft->right == NULL)) //왼쪽 노드가 리프 노드인데 삭제하고자하는 값이 존재하지 않을 때
+		else if((tempLeft->left == NULL) & (tempLeft->right == NULL)) //왼쪽 자식 노드가 리프 노드인데 삭제하고자하는 값이 존재하지 않을 때
 		{
 			printf("The node [%d] does not exist.\n\n", key); //오류 메세지 출력
 			return 0; //함수 종료
 		}
-		else if (tempLeft->key == key) //왼쪽 노드가 삭제하고자하는 값을 가졌으나 리프 노드가 아닐 때
+		else if (tempLeft->key == key) //왼쪽 자식 노드가 삭제하고자하는 값을 가졌으나 리프 노드가 아닐 때
 		{
 			printf("The node [%d] is not a leaf node.\n\n", key); //오류 메세지 출력
 			return 0; //함수 종료
 		}
-		else //왼쪽 노드가 삭제하고자하는 값을 갖지 않고 리프 노드도 아닐 때
+		else //왼쪽 자식 노드가 삭제하고자하는 값을 갖지 않고 리프 노드도 아닐 때
 		{
 			deleteLeafNode(tempLeft, key); //왼쪽 서브 트리를 조사하기 위해 deleteLeafNode 호출
 		}
 	}
 	else if ((temp->key < key) & (tempRight != NULL)) //temp의 key값보다 삭제하고자하는 값이 더 크고 temp의 오른쪽 서브 트리가 존재할 때
 	{
-		if ((tempRight->left == NULL) & (tempRight->right == NULL) & (tempRight->key == key)) //오른쪽 노드가 삭제하고자하는 값을 가지면서 리프 노드일 때
+		if ((tempRight->left == NULL) & (tempRight->right == NULL) & (tempRight->key == key)) //오른쪽 자식 노드가 삭제하고자하는 값을 가지면서 리프 노드일 때
 		{
-			free(tempRight); //오른쪽 노드의 메모리 해제
+			free(tempRight); //오른쪽 자식 노드의 메모리 해제
 			temp->right = NULL; //temp의 오른쪽 링크는 NULL을 가리킴
 			return 0; //함수 종료
 		}
-		else if ((tempRight->left == NULL) & (tempRight->right == NULL)) //오른쪽 노드가 리프 노드인데 삭제하고자하는 값이 존재하지 않을 때
+		else if ((tempRight->left == NULL) & (tempRight->right == NULL)) //오른쪽 자식 노드가 리프 노드인데 삭제하고자하는 값이 존재하지 않을 때
 		{
 			printf("The node [%d] does not exist.\n\n", key); //오류 메세지 출력
 			return 0; //함수 종료
 		}
-		else if (tempRight->key == key) //오른쪽 노드가 삭제하고자하는 값을 가졌으나 리프 노드가 아닐 때
+		else if (tempRight->key == key) //오른쪽 자식 노드가 삭제하고자하는 값을 가졌으나 리프 노드가 아닐 때
 		{
 			printf("The node [%d] is not a leaf node.\n\n", key); //오류 메세지 출력
 			return 0; //함수 종료
 		}
-		else //오른쪽 노드가 삭제하고자하는 값을 갖지 않고 리프 노드도 아닐 때
+		else //오른쪽 자식 노드가 삭제하고자하는 값을 갖지 않고 리프 노드도 아닐 때
 		{
 			deleteLeafNode(tempRight, key); //오른쪽 서브 트리를 조사하기 위해 deleteLeafNode 호출
 		}
@@ -307,7 +307,7 @@ Node* searchIterative(Node* head, int key)
 {
 	Node* search = head->left; //노드를 찾기 위한 포인터 search 선언 후 루트 노드를 가리키도록 초기화
 	Node* temp = head->left; //현재 조사하고자 하는 노드를 가리키는 포인터 temp 선언 후 루트 노드를 가리키도록 초기화 
-	for (; search; search = search->right) //search가 오른쪽 노드로 이동하면서 NULL이 될 때까지 반복
+	for (; search; search = search->right) //search가 오른쪽 자식 노드로 이동하면서 NULL이 될 때까지 반복
 	{
 		for (temp = search; temp; temp = temp->left) //temp는 search 노드부터 시작하여 왼쪽으로 이동하면서 NULL이 될 때까지 key 값 검사 반복
 		{
