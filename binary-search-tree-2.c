@@ -154,16 +154,16 @@ void recursiveInorder(Node* ptr)
  */
 void iterativeInorder(Node* node)
 {
-	for (;;) //node가 NULL일 때까지 스택에 node를 삽입하고, 스택에서 값을 삭제하여 공백 스택이 될 때까지 for문 반복
+	for (;;) //공백 스택이 될 때까지 for문 반복
 	{
 		for (; node; node = node->left) //node를 왼쪽 자식 노드로 바꾸면서 NULL이 되기 전까지 반복
 		{
 			push(node); //node를 스택에 삽입
 		}
-		node = pop(); //스택에서 삭제(pop)한 결과값을 node에 저장
+		node = pop(); //스택에서 삭제한 후 결과값을 node에 저장
 		if (!node) //node가 NULL, 즉 스택이 공백 상태일 때
-			break; //for(;;)의 반복문 종료
-		printf(" [%d]", node->key); //pop한 결과값을 저장한 node의 key를 출력
+			break; //for (;;)의 반복 종료
+		printf(" [%d] ", node->key); //pop한 결과값을 저장한 node의 key 값 출력
 		node = node->right; //node를 오른쪽 자식 노드로 바꿈
 	}
 }
@@ -173,6 +173,27 @@ void iterativeInorder(Node* node)
  */
 void levelOrder(Node* ptr)
 {
+	if (!ptr) //트리가 공백일 때
+	{
+		return; //함수 종료
+	}
+	enQueue(ptr); //ptr 노드를 큐에 삽입
+	for (;;) //노드가 큐에 존재하지 않아 함수 deQueue가 NULL을 반환할 때까지 for문 반복
+	{
+		ptr = deQueue(); //큐에서 노드를 삭제한 후 결과값을 ptr에 저장
+		if (ptr) //ptr이 NULL이 아닐 때
+		{
+			printf(" [%d] ", ptr->key); //ptr의 key 값 출력
+			if (ptr->left) //ptr의 왼쪽 자식 노드가 존재할 때
+				enQueue(ptr->left); //왼쪽 자식 노드를 큐에 삽입
+			if (ptr->right) //ptr의 오른쪽 자식 노드가 존재할 때
+				enQueue(ptr->left); //오른쪽 자식 노드를 큐에 삽입
+		}
+		else //ptr이 NULL, 즉 더이상 큐에 노드가 존재하지 않을 때
+		{
+			break; //for (;;)의 반복 종료
+		}
+	}
 }
 
 
