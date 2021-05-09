@@ -187,7 +187,7 @@ void levelOrder(Node* ptr)
 			if (ptr->left) //ptr의 왼쪽 자식 노드가 존재할 때
 				enQueue(ptr->left); //왼쪽 자식 노드를 큐에 삽입
 			if (ptr->right) //ptr의 오른쪽 자식 노드가 존재할 때
-				enQueue(ptr->left); //오른쪽 자식 노드를 큐에 삽입
+				enQueue(ptr->right); //오른쪽 자식 노드를 큐에 삽입
 		}
 		else //ptr이 NULL, 즉 더이상 큐에 노드가 존재하지 않을 때
 		{
@@ -316,7 +316,7 @@ void enQueue(Node* aNode)
 		printf("Unable to insert [%d] into the queue.\n", aNode->key); //에러 메세지 출력
 		return; //함수 종료
 	}
-	queue[++rear] = aNode->key; //rear을 증가시키면서 큐에 aNode 삽입
+	queue[++rear] = aNode; //rear을 1 증가한 후 큐에 aNode 삽입
 }
 
 void printStack()
