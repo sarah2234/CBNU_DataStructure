@@ -280,7 +280,9 @@ Node* pop()
 	{
 		return NULL; //NULL 반환
 	}
-	return stack[top--]; //스택의 top 부분에 해당하는 노드 삭제하고 반환
+	Node* node = stack[top]; //포인터 node에 스택의 top에 해당하는 노드 저장
+	stack[top--] = '\0'; //스택의 top에 해당하는 노드 삭제 후 top은 1 감소
+	return node; //node 반환
 }
 
 void push(Node* aNode)
@@ -297,10 +299,24 @@ void push(Node* aNode)
 
 Node* deQueue()
 {
+	if (front == rear) //큐가 공백일 때
+	{
+		return NULL; //NULL 반환
+	}
+	front = (front + 1) % MAX_QUEUE_SIZE; //큐의 front를 1 증가시킴
+	Node* node = queue[front]; //포인터 node에 큐의 front에 해당하는 노드 저장
+	queue[front] = '\0'; //큐의 front에 해당하는 노드 삭제
+	return node; //node 반환
 }
 
 void enQueue(Node* aNode)
 {
+	if (front == (rear + 1) % MAX_QUEUE_SIZE)
+	{
+		printf("Unable to insert [%d] into the queue.\n", aNode->key); //에러 메세지 출력
+		return; //함수 종료
+	}
+	queue[++rear] = aNode->key; //rear을 증가시키면서 큐에 aNode 삽입
 }
 
 void printStack()
