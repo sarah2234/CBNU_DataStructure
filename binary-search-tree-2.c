@@ -196,9 +196,9 @@ void levelOrder(Node* ptr)
 
 int insert(Node* head, int key)
 {
-	Node* newNode = (Node*)malloc(sizeof(Node));
+	Node* newNode = (Node*)malloc(sizeof(Node)); //트리에 삽입할 새로운 노드를 가리키는 newNode 선언 후 메모리 할당
 	newNode->key = key;
-	newNode->left = NULL;
+	newNode->left = NULL; //newNode는 리프 노드로서 삽입되므로, 자식 노드가 존재하지 않음
 	newNode->right = NULL;
 
 	if (head->left == NULL) { //루트 노드가 존재하지 않을 때
@@ -326,13 +326,13 @@ int deleteChildNode(Node* parent, Node* child)
 			previous->left = linkNode->right; //linkNode 이전의 노드 previous의 왼쪽 자식 노드는 linkNode의 오른쪽 자식 노드가 됨
 			linkNode->right = child->right; //linkNode의 오른쪽 자식 노드는 child의 오른쪽 자식 노드가 됨
 			linkNode->left = child->left; //linkNode의 왼쪽 자식 노드는 child의 왼쪽 자식 노드가 됨
-			if (parent->left == child)
+			if (parent->left == child) //child가 왼쪽 자식 노드일 때
 			{
-				parent->left = linkNode;
+				parent->left = linkNode; //parent의 왼쪽 자식 노드가 linkNode가 되도록 함
 			}
-			else
+			else //child가 오른쪽 자식 노드일 때
 			{
-				parent->right = linkNode;
+				parent->right = linkNode; //parent의 오른쪽 자식 노드가 linkNode가 되도록 함
 			}
 			free(child); //삭제하려는 노드의 메모리 해제
 			return 0; //삭제 후 함수 종료
