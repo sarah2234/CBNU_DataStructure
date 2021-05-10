@@ -95,15 +95,13 @@ int main()
 			scanf("%d", &key); //삭제할 값 입력
 			deleteNode(head, key); //트리에서 해당 값을 가진 노드 삭제
 			break;
-
-		case 'r': case 'R': //command가 't' 또는 'T'일 때
+		case 'r': case 'R': //command가 'r' 또는 'R'일 때
 			recursiveInorder(head->left); //순환적 중위 순회를 사용하여 노드 출력
 			break;
 		case 't': case 'T': //command가 't' 또는 'T'일 때
 			iterativeInorder(head->left); //반복적 중위 순회를 사용하여 노드 출력
 			break;
-
-		case 'l': case 'L': //command가 'd' 또는 'D'일 때
+		case 'l': case 'L': //command가 'l' 또는 'L'일 때
 			levelOrder(head->left); //레벨 순서 순회를 사용하여 노드 출력
 			break;
 
