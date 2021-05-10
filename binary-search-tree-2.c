@@ -243,6 +243,72 @@ int insert(Node* head, int key)
 
 int deleteNode(Node* head, int key)
 {
+	if (head->right == head)
+	{
+		head = head->left;
+	}
+	Node* temp = head; //입력받은 key 값과 비교할 노드를 가리키는 포인터 temp 선언 후 head로 초기화
+	Node* tempLeft = temp->left; //temp의 왼쪽 자식 노드를 가리키는 포인터 tempLeft 선언 후 temp->left로 초기화
+	Node* tempRight = temp->right; //temp의 오른쪽 자식 노드를 가리키는 포인터 tempRight 선언 후 temp->right로 초기화
+	Node* linkNode = NULL; //삭제하려는 노드가 두 개의 자식 노드를 가질 때, 삭제 후 새로 연결해줄 노드를 찾는 포인터 linkNode 선언 후 NULL로 초기화
+	Node* previous = NULL; //linkNode 이전의 노드를 가리키는 포인터 previous 선언 후 NULL로 초기화
+
+	if (temp->key == key) //헤드 노드
+	{
+
+		return 0;
+	}
+
+	if ((temp->key > key) & (tempLeft != NULL)) //삭제하고자하는 값보다 temp의 key값이 더 크고 temp의 왼쪽 서브 트리가 존재할 때 왼쪽 자식 노드 tempLeft 조사
+	{
+		if ((tempLeft->left == NULL) & (tempLeft->right == NULL) & (tempLeft->key == key)) //temp의 왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드이면서 리프 노드일 때
+		{
+			free(tempLeft); //삭제하려는 노드의 메모리 해제
+			temp->left = NULL; //tempLeft의 부모 노드 temp의 왼쪽 링크는 NULL을 가리킴
+			return 0; //삭제 후 함수 종료
+		}
+		else if ((tempLeft->right == NULL) & (tempLeft->key == key)) //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하고, tempLeft의 왼쪽 자식 노드가 있을 때
+		{
+			temp->left = tempLeft->left; //부모 노드 temp의 왼쪽 자식 노드는 tempLeft의 왼쪽 자식 노드가 됨
+			free(tempLeft); //삭제하려는 노드의 메모리 해제
+			return 0; //삭제 후 함수 종료
+		}
+		else if ((tempLeft->left == NULL) & (tempLeft->key == key)) //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하고, tempLeft의 오른쪽 자식 노드가 있을 때
+		{
+			temp->right = tempLeft->right; //부모 노드 temp의 오른쪽 자식 노드는 tempLeft의 오른쪽 자식 노드가 됨
+			free(tempLeft); //삭제하려는 노드의 메모리 해제
+			return 0; //삭제 후 함수 종료
+		}
+		else if (tempLeft->key == key) //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하고, tempLeft의 오른쪽과 왼쪽에 자식 노드가 있을 때
+		{
+			linkNode = tempLeft->right; //tempLeft의 오른쪽 서브 트리에서 새로 연결해줄 노드를 찾고자 linkNode를 tempLeft->right로 바꿈
+			for (; linkNode->left; linkNode = linkNode->left) //linkNode를 왼쪽 자식 노드로 옮겨가면서 linkNode의 왼쪽 자식 노드가 없을 때까지 for문 반복
+			{
+				previous = linkNode; //linkNode가 이전에 방문했던 노드를 가리키는 previous에 linkNode를 저장
+			}
+			//linkNode의 왼쪽 자식 노드가 없으면 tempLeft의 오른쪽 서브 트리 중에서 최소값을 갖는 노드이다.
+			if (previous != NULL) //tempLeft의 오른쪽 자식 노드가 오른쪽 서브 트리에서 최소값을 가지지 않을 때 (for문이 실행되었으므로 previous != NULL)
+			{
+				previous->left = linkNode->right; //linkNode 이전의 노드 previous의 왼쪽 자식 노드는 linkNode의 오른쪽 자식 노드가 됨
+				linkNode->right = tempLeft->right; //linkNode의 오른쪽 자식 노드는 tempLeft의 오른쪽 자식 노드가 됨
+				linkNode->left = tempLeft->left; //linkNode의 왼쪽 자식 노드는 tempLeft의 왼쪽 자식 노드가 됨
+				temp->left = linkNode; //temp의 왼쪽 자식 노드는 linkNode가 됨
+				free(tempLeft); //삭제하려는 노드의 메모리 해제
+				return 0; //삭제 후 함수 종료
+			}
+			else //tempLeft의 오른쪽 자식 노드가 오른쪽 서브 트리에서 최소값을 가질 때 (for문이 실행되지 않았으므로 처음에 previous = NULL로 초기화한 것 유지)
+			{
+				linkNode->left = tempLeft->left; //linkNode의 왼쪽 자식 노드는 tempLeft의 왼쪽 자식 노드가 됨
+				temp->left = linkNode; //temp의 왼쪽 자식 노드는 linkNode가 됨
+				free(tempLeft); //삭제하려는 노드의 메모리 해제
+				return 0; //삭제 후 함수 종료
+			}
+		}
+		else //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하지 않을 때
+		{
+			deleteNode(tempLeft, key); //왼쪽 서브 트리를 조사하기 위해 deleteNode 호출
+		}
+	}
 }
 
 
