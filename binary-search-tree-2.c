@@ -48,6 +48,8 @@ int deleteNode(Node* head, int key);  /* delete the node for the key */
 int freeBST(Node* head); /* free all memories allocated to the tree */
 
 /* you may add your own defined functions if necessary */
+int deleteChildNode(Node* parent, Node* child); //자식 노드를 삭제하기 위한 함수
+
 
 
 void printStack();
@@ -243,74 +245,119 @@ int insert(Node* head, int key)
 
 int deleteNode(Node* head, int key)
 {
-	if (head->right == head)
-	{
-		head = head->left;
-	}
 	Node* temp = head; //입력받은 key 값과 비교할 노드를 가리키는 포인터 temp 선언 후 head로 초기화
-	Node* tempLeft = temp->left; //temp의 왼쪽 자식 노드를 가리키는 포인터 tempLeft 선언 후 temp->left로 초기화
-	Node* tempRight = temp->right; //temp의 오른쪽 자식 노드를 가리키는 포인터 tempRight 선언 후 temp->right로 초기화
-	Node* linkNode = NULL; //삭제하려는 노드가 두 개의 자식 노드를 가질 때, 삭제 후 새로 연결해줄 노드를 찾는 포인터 linkNode 선언 후 NULL로 초기화
-	Node* previous = NULL; //linkNode 이전의 노드를 가리키는 포인터 previous 선언 후 NULL로 초기화
-
-	if (temp->key == key) //헤드 노드
+	if (temp->right == temp) //temp가 헤드 노드를 가리킬 때
 	{
-
-		return 0;
+		temp = temp->left; //temp가 루트 노드를 가리키도록 변경
 	}
 
-	if ((temp->key > key) & (tempLeft != NULL)) //삭제하고자하는 값보다 temp의 key값이 더 크고 temp의 왼쪽 서브 트리가 존재할 때 왼쪽 자식 노드 tempLeft 조사
+	if (temp->key == key) //루트 노드가 삭제하고자하는 노드에 해당할 때
 	{
-		if ((tempLeft->left == NULL) & (tempLeft->right == NULL) & (tempLeft->key == key)) //temp의 왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드이면서 리프 노드일 때
+		deleteChildNode(head, temp); //루트 노드를 삭제하고자 deleteChildNode 호출
+		return 0; //삭제 후 함수 종료
+	}
+
+	if ((temp->key > key) & (temp->left != NULL)) //삭제하고자하는 값보다 temp의 key값이 더 크고 temp의 왼쪽 서브 트리가 존재할 때, 왼쪽 자식 노드 조사
+	{
+		if(temp->left->key == key) //temp의 왼쪽 자식 노드가 삭제하고자하는 노드에 해당할 때
 		{
-			free(tempLeft); //삭제하려는 노드의 메모리 해제
-			temp->left = NULL; //tempLeft의 부모 노드 temp의 왼쪽 링크는 NULL을 가리킴
+			deleteChildNode(temp, temp->left); //왼쪽 자식 노드를 삭제하고자 deleteChildNode 호출
 			return 0; //삭제 후 함수 종료
 		}
-		else if ((tempLeft->right == NULL) & (tempLeft->key == key)) //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하고, tempLeft의 왼쪽 자식 노드가 있을 때
+		else //왼쪽 자식 노드가 삭제하고자하는 노드에 해당하지 않을 때
 		{
-			temp->left = tempLeft->left; //부모 노드 temp의 왼쪽 자식 노드는 tempLeft의 왼쪽 자식 노드가 됨
-			free(tempLeft); //삭제하려는 노드의 메모리 해제
+			deleteNode(temp->left, key); //왼쪽 서브 트리를 조사하기 위해 deleteNode 호출
+		}
+	}
+
+	else if ((temp->key < key) & (temp->right != NULL)) //삭제하고자하는 값보다 temp의 key값이 더 작고 temp의 오른쪽 서브 트리가 존재할 때, 오른쪽 자식 노드 조사
+	{
+		if (temp->right->key == key) //temp의 오른쪽 자식 노드가 삭제하고자하는 노드에 해당할 때
+		{
+			deleteChildNode(temp, temp->right); //오른쪽 자식 노드를 삭제하고자 deleteChildNode 호출
 			return 0; //삭제 후 함수 종료
 		}
-		else if ((tempLeft->left == NULL) & (tempLeft->key == key)) //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하고, tempLeft의 오른쪽 자식 노드가 있을 때
+		else //오른쪽 자식 노드가 삭제하고자하는 노드에 해당하지 않을 때
 		{
-			temp->right = tempLeft->right; //부모 노드 temp의 오른쪽 자식 노드는 tempLeft의 오른쪽 자식 노드가 됨
-			free(tempLeft); //삭제하려는 노드의 메모리 해제
-			return 0; //삭제 후 함수 종료
+			deleteNode(temp->right, key); //오른쪽 서브 트리를 조사하기 위해 deleteNode 호출
 		}
-		else if (tempLeft->key == key) //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하고, tempLeft의 오른쪽과 왼쪽에 자식 노드가 있을 때
-		{
-			linkNode = tempLeft->right; //tempLeft의 오른쪽 서브 트리에서 새로 연결해줄 노드를 찾고자 linkNode를 tempLeft->right로 바꿈
-			for (; linkNode->left; linkNode = linkNode->left) //linkNode를 왼쪽 자식 노드로 옮겨가면서 linkNode의 왼쪽 자식 노드가 없을 때까지 for문 반복
-			{
-				previous = linkNode; //linkNode가 이전에 방문했던 노드를 가리키는 previous에 linkNode를 저장
-			}
-			//linkNode의 왼쪽 자식 노드가 없으면 tempLeft의 오른쪽 서브 트리 중에서 최소값을 갖는 노드이다.
-			if (previous != NULL) //tempLeft의 오른쪽 자식 노드가 오른쪽 서브 트리에서 최소값을 가지지 않을 때 (for문이 실행되었으므로 previous != NULL)
-			{
-				previous->left = linkNode->right; //linkNode 이전의 노드 previous의 왼쪽 자식 노드는 linkNode의 오른쪽 자식 노드가 됨
-				linkNode->right = tempLeft->right; //linkNode의 오른쪽 자식 노드는 tempLeft의 오른쪽 자식 노드가 됨
-				linkNode->left = tempLeft->left; //linkNode의 왼쪽 자식 노드는 tempLeft의 왼쪽 자식 노드가 됨
-				temp->left = linkNode; //temp의 왼쪽 자식 노드는 linkNode가 됨
-				free(tempLeft); //삭제하려는 노드의 메모리 해제
-				return 0; //삭제 후 함수 종료
-			}
-			else //tempLeft의 오른쪽 자식 노드가 오른쪽 서브 트리에서 최소값을 가질 때 (for문이 실행되지 않았으므로 처음에 previous = NULL로 초기화한 것 유지)
-			{
-				linkNode->left = tempLeft->left; //linkNode의 왼쪽 자식 노드는 tempLeft의 왼쪽 자식 노드가 됨
-				temp->left = linkNode; //temp의 왼쪽 자식 노드는 linkNode가 됨
-				free(tempLeft); //삭제하려는 노드의 메모리 해제
-				return 0; //삭제 후 함수 종료
-			}
-		}
-		else //왼쪽 자식 노드 tempLeft가 삭제하고자하는 노드에 해당하지 않을 때
-		{
-			deleteNode(tempLeft, key); //왼쪽 서브 트리를 조사하기 위해 deleteNode 호출
-		}
+	}
+
+	else //temp가 리프 노드일 때
+	{
+		printf("The node [%d] does not exist.\n\n", key); //오류 메세지 출력
 	}
 }
 
+int deleteChildNode(Node* parent, Node* child)
+{
+	//child가 삭제하고자하는 노드에 해당하고, parent는 child의 부모 노드
+	
+	if ((child->left == NULL) & (child->right == NULL)) //child가 리프 노드일 때
+	{
+		free(child); //삭제하려는 노드의 메모리 해제
+		parent->left = NULL; //child의 부모 노드 parent의 왼쪽 링크는 NULL을 가리킴
+		return 0; //삭제 후 함수 종료
+	}
+
+	else if ((child->right == NULL)) //child의 왼쪽 자식 노드가 있을 때
+	{
+		parent->left = child->left; //부모 노드 parent의 왼쪽 자식 노드는 child의 왼쪽 자식 노드가 됨
+		free(child); //삭제하려는 노드의 메모리 해제
+		return 0; //삭제 후 함수 종료
+	}
+
+	else if ((child->left == NULL)) //child의 오른쪽 자식 노드가 있을 때
+	{
+		parent->right = child->right; //부모 노드 parent의 오른쪽 자식 노드는 child의 오른쪽 자식 노드가 됨
+		free(child); //삭제하려는 노드의 메모리 해제
+		return 0; //삭제 후 함수 종료
+	}
+
+	else //child의 오른쪽과 왼쪽에 자식 노드가 있을 때
+	{
+		Node* linkNode = child->right; //child의 오른쪽 서브 트리에서 새로 연결해줄 노드를 찾고자 linkNode 선언 후 child->right로 초기화
+		Node* previous = NULL; //linkNode 이전의 노드를 가리키는 포인터 previous 선언 후 NULL로 초기화
+
+		for (; linkNode->left; linkNode = linkNode->left) //linkNode를 왼쪽 자식 노드로 옮겨가면서 linkNode의 왼쪽 자식 노드가 없을 때까지 for문 반복
+		{
+			previous = linkNode; //linkNode가 이전에 방문했던 노드를 가리키는 previous에 linkNode를 저장
+		}
+		//linkNode의 왼쪽 자식 노드가 없으면 해당 노드가 child의 오른쪽 서브 트리 중에서 최소값을 갖는 노드이다.
+		//따라서 for 문은 실행되지 않고, previous는 처음에 초기화해주었던 NULL값을 계속 가지고 있게 된다.
+		
+		if (previous != NULL) //tempLeft의 오른쪽 자식 노드가 오른쪽 서브 트리에서 최소값을 가지지 않을 때
+		{
+			previous->left = linkNode->right; //linkNode 이전의 노드 previous의 왼쪽 자식 노드는 linkNode의 오른쪽 자식 노드가 됨
+			linkNode->right = child->right; //linkNode의 오른쪽 자식 노드는 child의 오른쪽 자식 노드가 됨
+			linkNode->left = child->left; //linkNode의 왼쪽 자식 노드는 child의 왼쪽 자식 노드가 됨
+			if (parent->left == child)
+			{
+				parent->left = linkNode;
+			}
+			else
+			{
+				parent->right = linkNode;
+			}
+			free(child); //삭제하려는 노드의 메모리 해제
+			return 0; //삭제 후 함수 종료
+		}
+		else //child의 오른쪽 자식 노드가 오른쪽 서브 트리에서 최소값을 가질 때
+		{
+			linkNode->left = child->left; //linkNode의 왼쪽 자식 노드는 child의 왼쪽 자식 노드가 됨
+			if (parent->left == child) //child가 parent의 왼쪽 자식 노드일 때
+			{
+				parent->left = linkNode; //parent의 왼쪽 자식 노드는 linkNode가 됨
+			}
+			else //child가 parent의 오른쪽 자식 노드일 때
+			{
+				parent->right = linkNode; //parent의 오른쪽 자식 노드는 linkNode가 됨
+			}
+			free(child); //삭제하려는 노드의 메모리 해제
+			return 0; //삭제 후 함수 종료
+		}
+	}
+}
 
 void freeNode(Node* ptr)
 {
