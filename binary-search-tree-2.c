@@ -467,5 +467,6 @@ void enQueue(Node* aNode)
 		printf("Unable to insert [%d] into the queue.\n", aNode->key); //에러 메세지 출력
 		return; //함수 종료
 	}
-	queue[++rear] = aNode; //rear을 1 증가한 후 큐에 aNode 삽입
+	rear = (rear + 1) % MAX_QUEUE_SIZE;
+	queue[rear] = aNode; //rear을 1 증가한 후 큐에 aNode 삽입
 }
