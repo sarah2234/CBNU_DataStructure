@@ -139,7 +139,7 @@ int initializeBST(Node** h) {
 
 void recursiveInorder(Node* ptr)
 {
-	if (ptr) {
+	if (ptr) { //ptr이 NULL이 아닐 때 순환적 중위 순회 방식으로 노드 출력
 		recursiveInorder(ptr->left);
 		printf(" [%d] ", ptr->key);
 		recursiveInorder(ptr->right);
@@ -201,8 +201,8 @@ int insert(Node* head, int key)
 	newNode->left = NULL;
 	newNode->right = NULL;
 
-	if (head->left == NULL) {
-		head->left = newNode;
+	if (head->left == NULL) { //루트 노드가 존재하지 않을 때
+		head->left = newNode; //루트 노드로서 newNode를 트리에 삽입
 		return 1;
 	}
 
@@ -356,27 +356,27 @@ int deleteChildNode(Node* parent, Node* child)
 
 void freeNode(Node* ptr)
 {
-	if (ptr) {
-		freeNode(ptr->left);
-		freeNode(ptr->right);
-		free(ptr);
+	if (ptr) { //ptr이 NULL이 아닐 때
+		freeNode(ptr->left); //ptr의 왼쪽 서브 트리의 메모리를 해제하고자 freeNode 호출
+		freeNode(ptr->right); //ptr의 오른쪽 서브 트리의 메모리를 해제하고자 freeNode 호출
+		free(ptr); //ptr의 메모리 해제
 	}
 }
 
 int freeBST(Node* head)
 {
 
-	if (head->left == head)
+	if (head->left == head) //head가 헤드 노드를 가리킬 때
 	{
-		free(head);
-		return 1;
+		free(head); //헤드 노드의 메모리 해제
+		return 1; //함수 종료
 	}
 
-	Node* p = head->left;
+	Node* p = head->left; //p 선언 후 head의 왼쪽 자식 노드를 가리키도록 초기화
 
-	freeNode(p);
+	freeNode(p); //p와 p의 후손 노드의 메모리를 해제하고자 freeNode 호출
 
-	free(head);
+	free(head); //head의 메모리 해제
 	return 1;
 }
 
