@@ -14,30 +14,30 @@
 
 
 typedef struct node {
-	int key;
-	struct node* left;
-	struct node* right;
-} Node;
+	int key; //노드의 값을 저장하는 key 선언
+	struct node* left; //왼쪽 자식 노드를 가리키는 포인터 left 선언
+	struct node* right; //오른쪽 자식 노드를 가리키는 포인터 right 선언
+} Node; //노드를 생성하기 위한 구조체 node 선언 후 Node로 재정의
 
 /* for stack */
-#define MAX_STACK_SIZE		20
-Node* stack[MAX_STACK_SIZE];
-int top = -1;
+#define MAX_STACK_SIZE		20 //스택이 최대로 저장할 수 있는 노드의 개수는 20
+Node* stack[MAX_STACK_SIZE]; //노드를 저장하는 스택 생성 (반복적 중위 순회에 사용)
+int top = -1; //스택의 위치를 알려주는 top 선언 후 -1로 초기화
 
-Node* pop();
-void push(Node* aNode);
+Node* pop(); //스택의 노드를 삭제하는 함수
+void push(Node* aNode); //스택에 aNode 노드를 삽입하는 함수
 
 /* for queue */
-#define MAX_QUEUE_SIZE		20
-Node* queue[MAX_QUEUE_SIZE];
-int front = -1;
-int rear = -1;
+#define MAX_QUEUE_SIZE		20 //큐가 최대로 저장할 수 있는 노드의 개수는 19
+Node* queue[MAX_QUEUE_SIZE]; //노드를 저장하는 큐 생성 (레벨 순서 순회에 사용)
+int front = -1; //큐에서 삭제할 위치를 가리키는 front 선언 후 -1로 초기화
+int rear = -1; //큐에서 삽입할 위치를 가리키는 rear 선언 후 -1로 초기화
 
-Node* deQueue();
-void enQueue(Node* aNode);
+Node* deQueue(); //큐의 노드를 삭제하는 함수
+void enQueue(Node* aNode); //큐에 aNode 노드를 삽입하는 함수
 
 
-int initializeBST(Node** h);
+int initializeBST(Node** h); //트리를 초기화하는 함수
 
 /* functions that you have to implement */
 void recursiveInorder(Node* ptr);	  /* recursive inorder traversal */
@@ -52,19 +52,19 @@ int deleteChildNode(Node* parent, Node* child); //자식 노드를 삭제하기 위한 함수
 
 
 
-void printStack();
+
 
 
 
 int main()
 {
-	char command;
-	int key;
-	Node* head = NULL;
+	char command; //명령어를 입력받기 위한 command 변수 선언
+	int key; //값을 입력받기 위한 key 변수 선언
+	Node* head = NULL; //트리의 헤드 노드를 가리키는 포인터 head 선언 후 트리 생성 전 NULL을 가리키도록 초기화
 
 	printf("----- [이승현] [2020039075] -----\n");
 
-	do {
+	do { //'q' 또는 'Q' 를 입력받을 때까지 최소 1회 이상 반복 실행
 		printf("\n\n");
 		printf("----------------------------------------------------------------\n");
 		printf("                   Binary Search Tree #2                        \n");
@@ -76,47 +76,44 @@ int main()
 		printf("----------------------------------------------------------------\n");
 
 		printf("Command = ");
-		scanf(" %c", &command);
+		scanf(" %c", &command); //명령어를 입력받아 command에 저장
 
 		switch (command) {
-		case 'z': case 'Z':
-			initializeBST(&head);
+		case 'z': case 'Z': //command가 'z' 또는 'Z'일 때
+			initializeBST(&head); //head에 메모리 할당하여 트리 생성
 			break;
-		case 'q': case 'Q':
-			freeBST(head);
+		case 'q': case 'Q': //command가 'q' 또는 'Q'일 때
+			freeBST(head); //트리의 노드들 메모리 해제
 			break;
-		case 'i': case 'I':
+		case 'i': case 'I': //command가 'i' 또는 'I'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			insert(head, key);
+			scanf("%d", &key); //삽입할 값 입력
+			insert(head, key); //트리에 해당 값을 가진 노드 삽입
 			break;
-		case 'd': case 'D':
+		case 'd': case 'D': //command가 'd' 또는 'D'일 때
 			printf("Your Key = ");
-			scanf("%d", &key);
-			deleteNode(head, key);
+			scanf("%d", &key); //삭제할 값 입력
+			deleteNode(head, key); //트리에서 해당 값을 가진 노드 삭제
 			break;
 
-		case 'r': case 'R':
-			recursiveInorder(head->left);
+		case 'r': case 'R': //command가 't' 또는 'T'일 때
+			recursiveInorder(head->left); //순환적 중위 순회를 사용하여 노드 출력
 			break;
-		case 't': case 'T':
-			iterativeInorder(head->left);
-			break;
-
-		case 'l': case 'L':
-			levelOrder(head->left);
+		case 't': case 'T': //command가 't' 또는 'T'일 때
+			iterativeInorder(head->left); //반복적 중위 순회를 사용하여 노드 출력
 			break;
 
-		case 'p': case 'P':
-			printStack();
+		case 'l': case 'L': //command가 'd' 또는 'D'일 때
+			levelOrder(head->left); //레벨 순서 순회를 사용하여 노드 출력
 			break;
 
-		default:
-			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
+
+		default: //command가 상단의 문자 이외의 값일 때
+			printf("\n       >>>>>   Concentration!!   <<<<<     \n"); //오류 메세지 출력
 			break;
 		}
 
-	} while (command != 'q' && command != 'Q');
+	} while (command != 'q' && command != 'Q'); //command에 'q' 또는 'Q'를 입력받으면 반복문 종료
 
 	return 1;
 }
@@ -424,15 +421,10 @@ Node* deQueue()
 
 void enQueue(Node* aNode)
 {
-	if (front == (rear + 1) % MAX_QUEUE_SIZE)
+	if (front == (rear + 1) % MAX_QUEUE_SIZE) //큐가 만원일 때
 	{
 		printf("Unable to insert [%d] into the queue.\n", aNode->key); //에러 메세지 출력
 		return; //함수 종료
 	}
 	queue[++rear] = aNode; //rear을 1 증가한 후 큐에 aNode 삽입
-}
-
-void printStack()
-{
-
 }
