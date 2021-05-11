@@ -21,7 +21,7 @@ typedef struct node {
 
 /* for stack */
 #define MAX_STACK_SIZE		20 //스택이 최대로 저장할 수 있는 노드의 개수는 20
-Node* stack[MAX_STACK_SIZE]; //노드를 저장하는 스택 생성 (반복적 중위 순회에 사용)
+Node* stack[MAX_STACK_SIZE]; //노드를 저장하는 스택 생성 (중위 순회에 사용)
 int top = -1; //스택의 위치를 알려주는 top 선언 후 -1로 초기화
 
 Node* pop(); //스택의 노드를 삭제하는 함수
