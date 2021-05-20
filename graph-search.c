@@ -12,11 +12,6 @@
 #include <stdlib.h>
 #define MAX_VERTEX 10 //정점의 최대 수
 
-typedef struct graph {
-	int totalVertex; //그래프 내 정점의 총 개수
-	int vertex[MAX_VERTEX]; //그래프에 있는 정점
-}Graph;
-
 typedef struct node {
 	int key; //노드의 값 저장
 	struct node* link; //다음 노드를 가리킴
@@ -25,7 +20,7 @@ typedef struct node {
 int front = -1;
 int rear = -1;
 
-void initialize(Graph* graph, Node*** adjLists); //그래프와 인접 리스트를 초기화하는 함수
+void initializeAdjLists(Node*** adjLists); //그래프와 인접 리스트를 초기화하는 함수
 void freeAdjLists(Node** node); //인접 리스트에 할당된 메모리를 해제하는 함수
 void insertVertex(int key); //그래프에 정점을 삽입하는 함수
 void insertEdge(int key); //그래프에 간선을 삽입하는 함수
@@ -39,8 +34,6 @@ int main()
 	char command;
 	int key;
 	Node** adjLists = NULL; //연결 리스트가 요소인 배열
-	Graph graph;
-	graph.totalVertex = 0;
 
 	printf("----- [이승현] [2020039075] -----\n");
 
@@ -60,7 +53,7 @@ int main()
 
 		switch (command) {
 		case 'z': case 'Z':
-			initialize(&graph, &adjLists);
+			initializeAdjLists(&adjLists);
 			break;
 		case 'q': case 'Q':
 			freeAdjLists(adjLists);
@@ -95,32 +88,30 @@ int main()
 
 	return 1;
 }
-void initialize(Graph* graph, Node*** adjLists)
+void initializeAdjLists(Node*** adjLists)
 {
-	if (graph->totalVertex != 0) //그래프가 비어있지 않을 때
+	if (*adjLists != NULL) //그래프가 비어있지 않을 때
 	{
-		graph->totalVertex = 0; //그래프 내 정점의 수를 0으로 만듦
 		freeAdjLists(*adjLists); //인접 리스트의 메모리 해제
 	}
 
-	graph = (Graph*)malloc(sizeof(Graph)); //그래프에 메모리 할당
-	graph->totalVertex = 0; //그래프에 정점이 없는 상태
-
 	*adjLists = (Node**)malloc(MAX_VERTEX * sizeof(Node*)); //인접 리스트에서 꼬리인 정점의 개수는 최대 10
-	(*adjLists) = NULL;
-	(**adjLists) = NULL; //인접 리스트에 정점과 간선에 대한 정보가 없는 상태
+	for (int i = 0; i < MAX_VERTEX; i++) 
+	{
+		*((*adjLists) + i) = NULL; //인접 리스트에서 꼬리를 저장하는 포인터가 NULL을 가리키도록 함
+	}
 }
 
 void freeAdjLists(Node** adjLists) 
 {
-	for (int i = 0; (i < MAX_VERTEX) && (adjLists[i] != NULL); i++)
+	for (int i = 0; (i < MAX_VERTEX) && (adjLists[i] != NULL); i++) //인접 리스트에서 꼬리를 저장하는 포인터가 NULL이면 free()를 사용할 수 없음
 	{
 		free(adjLists[i]); //동일한 꼬리 정점을 가지는 간선에 대한 배열 메모리 해제
 	}
 	free(adjLists); //인접 리스트의 메모리 해제 완료
 }
 
-void insertVertex(int vertex)
+void insertVertex(int key)
 {
 
 }
