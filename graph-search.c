@@ -26,7 +26,7 @@ int front = -1;
 int rear = -1;
 
 void initialize(Graph* graph, Node*** adjLists); //그래프와 인접 리스트를 초기화하는 함수
-void freeAdjLists(Graph graph, Node** node); //인접 리스트에 할당된 메모리를 해제하는 함수
+void freeAdjLists(Node** node); //인접 리스트에 할당된 메모리를 해제하는 함수
 void insertVertex(int key); //그래프에 정점을 삽입하는 함수
 void insertEdge(int key); //그래프에 간선을 삽입하는 함수
 void depthFirstSearch(); //깊이 우선 탐색으로 정점을 방문하는 함수
@@ -63,7 +63,7 @@ int main()
 			initialize(&graph, &adjLists);
 			break;
 		case 'q': case 'Q':
-			freeAdjLists(graph, adjLists);
+			freeAdjLists(adjLists);
 			break;
 		case 'v': case 'V':
 			printf("Your Key = ");
@@ -100,19 +100,20 @@ void initialize(Graph* graph, Node*** adjLists)
 	if (graph->totalVertex != 0) //그래프가 비어있지 않을 때
 	{
 		graph->totalVertex = 0; //그래프 내 정점의 수를 0으로 만듦
-		freeAdjLists(*graph, *adjLists); //인접 리스트의 메모리 해제
+		freeAdjLists(*adjLists); //인접 리스트의 메모리 해제
 	}
 
 	graph = (Graph*)malloc(sizeof(Graph)); //그래프에 메모리 할당
 	graph->totalVertex = 0; //그래프에 정점이 없는 상태
 
 	*adjLists = (Node**)malloc(MAX_VERTEX * sizeof(Node*)); //인접 리스트에서 꼬리인 정점의 개수는 최대 10
-	(*adjLists) = NULL; //인접 리스트에 정점과 간선에 대한 정보가 없는 상태
+	(*adjLists) = NULL;
+	(**adjLists) = NULL; //인접 리스트에 정점과 간선에 대한 정보가 없는 상태
 }
 
-void freeAdjLists(Graph graph, Node** adjLists) 
+void freeAdjLists(Node** adjLists) 
 {
-	for (int i = 0; i < graph.totalVertex; i++)
+	for (int i = 0; (i < MAX_VERTEX) && (adjLists[i] != NULL); i++)
 	{
 		free(adjLists[i]); //동일한 꼬리 정점을 가지는 간선에 대한 배열 메모리 해제
 	}
