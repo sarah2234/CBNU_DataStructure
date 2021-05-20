@@ -26,7 +26,7 @@ void insertVertex(Node** adjLists, int key); //그래프에 정점을 삽입하는 함수
 void insertEdge(int key); //그래프에 간선을 삽입하는 함수
 void depthFirstSearch(); //깊이 우선 탐색으로 정점을 방문하는 함수
 void breathFirstSearch(); //너비 우선 탐색으로 정점을 방문하는 함수
-void printGraph(); //그래프를 화면에 출력하는 함수
+void printGraph(Node** adjLists); //그래프를 화면에 출력하는 함수
 
 
 int main()
@@ -76,7 +76,7 @@ int main()
 			break;
 
 		case 'p': case 'P':
-			printGraph();
+			printGraph(adjLists);
 			break;
 
 		default:
@@ -98,7 +98,7 @@ void initializeAdjLists(Node*** adjLists)
 	*adjLists = (Node**)malloc(MAX_VERTEX * sizeof(Node*)); //인접 리스트에서 꼬리인 정점의 개수는 최대 10
 	for (int i = 0; i < MAX_VERTEX; i++) 
 	{
-		//main 함수의 이중 포인터 adjLists를 행렬로 간주한다.
+		//main 함수의 이중 포인터 adjLists(인접 리스트)를 행렬로 간주한다.
 		*((*adjLists) + i) = NULL; //인접 리스트에서 꼬리를 저장하는 포인터가 NULL을 가리키도록 함(첫 번째 열에 해당)
 	}
 }
@@ -119,7 +119,8 @@ void insertVertex(Node** adjLists, int key)
 		if (adjLists[i] == NULL) //인접 리스트에 해당 값을 가진 정점이 존재하지 않고, adjLists의 비어있는 행을 발견했을 때
 		{
 			adjLists[i] = (Node*)malloc(sizeof(Node)); //인접 리스트의 행에 대하여 메모리 할당
-			adjLists[i]->key = key; //인접 리스트에 해당 값을 가진 정점 삽입 후 함수 종료(adjLists의 첫 번째 열에 정점 삽입)
+			adjLists[i]->key = key;
+			adjLists[i]->link = NULL; //인접 리스트에 해당 값을 가진 정점 삽입 후 함수 종료(adjLists의 첫 번째 열에 정점 삽입)
 			return;
 		}
 		if (adjLists[i]->key == key) //인접 리스트에 해당 값을 가진 정점이 존재할 때
@@ -146,7 +147,23 @@ void breathFirstSearch()
 
 }
 
-void printGraph()
+void printGraph(Node** adjLists) //인접 리스트 형태로 그래프 출력
 {
+	Node* head = NULL; //머리를 저장하는 head
 
+	for (int i = 0; i < MAX_VERTEX; i++) //인접 리스트의 행에 대해서 조사
+	{
+		if (adjLists[i] == NULL) //인접 리스트에서 꼬리인 정점이 더이상 없을 때
+			return; //함수 종료
+
+		printf("Tail: %d\n", adjLists[i]->key); //꼬리인 정점의 값 출력
+		printf("List of Edges: ");
+		for (head = (*adjLists)->link; head; head = head->link) //head가 꼬리를 저장하는 노드가 가리키는 곳부터 시작하여 NULL이 될 때까지 반복문 실행
+		{
+			printf("(%d, %d) ", adjLists[i]->key, adjLists[i]->link->key); //(꼬리, 머리) 출력
+		}
+		if (head == NULL) //해당 정점에 대한 간선이 존재하지 않을 때
+			printf("None"); //오류 메세지 출력
+		printf("\n\n");
+	}
 }
