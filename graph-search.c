@@ -24,7 +24,7 @@ void initializeAdjLists(Node*** adjLists); //±×·¡ÇÁ¿Í ÀÎÁ¢ ¸®½ºÆ®¸¦ ÃÊ±âÈ­ÇÏ´Â Ç
 void freeAdjLists(Node** node); //ÀÎÁ¢ ¸®½ºÆ®¿¡ ÇÒ´çµÈ ¸Ş¸ğ¸®¸¦ ÇØÁ¦ÇÏ´Â ÇÔ¼ö
 void insertVertex(Node** adjLists, int key); //±×·¡ÇÁ¿¡ Á¤Á¡À» »ğÀÔÇÏ´Â ÇÔ¼ö
 void insertEdge(Node** adjLists, int tail, int head); //±×·¡ÇÁ¿¡ °£¼±À» »ğÀÔÇÏ´Â ÇÔ¼ö
-void depthFirstSearch(); //±íÀÌ ¿ì¼± Å½»öÀ¸·Î Á¤Á¡À» ¹æ¹®ÇÏ´Â ÇÔ¼ö
+void depthFirstSearch(const Node** adjLists); //±íÀÌ ¿ì¼± Å½»öÀ¸·Î Á¤Á¡À» ¹æ¹®ÇÏ´Â ÇÔ¼ö
 void breathFirstSearch(); //³Êºñ ¿ì¼± Å½»öÀ¸·Î Á¤Á¡À» ¹æ¹®ÇÏ´Â ÇÔ¼ö
 void printGraph(Node** adjLists); //±×·¡ÇÁ¸¦ È­¸é¿¡ Ãâ·ÂÇÏ´Â ÇÔ¼ö
 
@@ -73,7 +73,7 @@ int main()
 			break;
 
 		case 'd': case 'D':
-			depthFirstSearch();
+			depthFirstSearch(adjLists);
 			break;
 
 		case 'b': case 'B':
@@ -119,22 +119,43 @@ void freeAdjLists(Node** adjLists)
 
 void insertVertex(Node** adjLists, int key)
 {
+	if (adjLists[9]) //±×·¡ÇÁ¿¡ 10°³ÀÇ Á¤Á¡ÀÌ ÀÖÀ» ¶§
+	{
+		printf("The graph is full!\n\n"); //ÀÎÁ¢ ±×·¡ÇÁ¿¡ ´õÀÌ»ó Á¤Á¡À» Ãß°¡ÇÒ ¼ö ¾øÀ» ¶§ ¿À·ù ¸Ş¼¼Áö Ãâ·Â
+		return; //ÇÔ¼ö Á¾·á
+	}
+
 	for (int i = 0; i < MAX_VERTEX; i++)
 	{
-		if (adjLists[i] == NULL) //ÀÎÁ¢ ¸®½ºÆ®¿¡ ÇØ´ç °ªÀ» °¡Áø Á¤Á¡ÀÌ Á¸ÀçÇÏÁö ¾Ê°í, adjListsÀÇ ºñ¾îÀÖ´Â ÇàÀ» ¹ß°ßÇßÀ» ¶§
+		//case 1: ±×·¡ÇÁ ³» Á¸ÀçÇÏ´Â ¸ğµç Á¤Á¡µéº¸´Ù °ªÀÌ Å« Á¤Á¡À» »ğÀÔÇÒ ¶§
+		if (adjLists[i] == NULL) //adjLists ¹è¿­¿¡¼­ ºó °ø°£À» ¹ß°ßÇßÀ» ¶§
 		{
-			adjLists[i] = (Node*)malloc(sizeof(Node)); //ÀÎÁ¢ ¸®½ºÆ®ÀÇ Çà¿¡ ´ëÇÏ¿© ¸Ş¸ğ¸® ÇÒ´ç
+			adjLists[i] = (Node*)malloc(sizeof(Node)); //±×·¡ÇÁ¿¡ »õ·Î ³ÖÀ» Á¤Á¡¿¡ ´ëÇÏ¿© ¸Ş¸ğ¸® ÇÒ´ç
 			adjLists[i]->key = key;
-			adjLists[i]->link = NULL; //ÀÎÁ¢ ¸®½ºÆ®¿¡ ÇØ´ç °ªÀ» °¡Áø Á¤Á¡ »ğÀÔ ÈÄ ÇÔ¼ö Á¾·á(adjListsÀÇ Ã¹ ¹øÂ° ¿­¿¡ Á¤Á¡ »ğÀÔ)
+			adjLists[i]->link = NULL; //ÇØ´ç °ªÀ» °¡Áø Á¤Á¡ »ğÀÔ ÈÄ ÇÔ¼ö Á¾·á
 			return;
 		}
-		if (adjLists[i]->key == key) //ÀÎÁ¢ ¸®½ºÆ®¿¡ ÇØ´ç °ªÀ» °¡Áø Á¤Á¡ÀÌ Á¸ÀçÇÒ ¶§
+
+		//case 2: ±×·¡ÇÁ ³» Á¤Á¡µéÀÇ Å©±â ¼ø¿¡ ¸Â°Ô ÀÎÁ¢ ¸®½ºÆ®ÀÇ Áß°£¿¡ Á¤Á¡À» »ğÀÔÇÒ ¶§
+		if (adjLists[i]->key > key) //»ğÀÔÇÏ·Á´Â °ªº¸´Ù ±×·¡ÇÁ¿¡ Á¸ÀçÇÏ´Â Á¤Á¡ÀÇ °ªÀÌ ´õ Å¬ ¶§
+		{
+			for (int j = MAX_VERTEX - 1; j != i; j--)
+			{
+				adjLists[j] = adjLists[j - 1]; //i ¹øÂ°¿¡ »õ·Î¿î ³ëµå¸¦ »ğÀÔÇÒ ¼ö ÀÖµµ·Ï adjListsÀÇ ³ëµå¸¦ ´ÙÀ½ ³ëµå·Î ¿Å±â´Â ÀÛ¾÷ ¹İº¹
+			}
+			adjLists[i] = (Node*)malloc(sizeof(Node)); //±×·¡ÇÁ¿¡ »õ·Î ³ÖÀ» Á¤Á¡¿¡ ´ëÇÏ¿© ¸Ş¸ğ¸® ÇÒ´ç
+			adjLists[i]->key = key;
+			adjLists[i]->link = NULL; //ÇØ´ç °ªÀ» °¡Áø Á¤Á¡ »ğÀÔ ÈÄ ÇÔ¼ö Á¾·á
+			return;
+		}
+
+		//case 3: ±×·¡ÇÁ ³» ÇØ´ç °ªÀ» °¡Áø Á¤Á¡ÀÌ ÀÌ¹Ì Á¸ÀçÇÒ ¶§
+		if (adjLists[i]->key == key)
 		{
 			printf("The vertex with the key [%d] already exists.\n\n", key); //¿À·ù ¸Ş¼¼Áö Ãâ·Â ÈÄ ÇÔ¼ö Á¾·á
 			return; 
 		}
 	}
-	printf("The graph is full!\n\n"); //ÀÎÁ¢ ±×·¡ÇÁ¿¡ ´õÀÌ»ó Á¤Á¡À» Ãß°¡ÇÒ ¼ö ¾øÀ» ¶§ ¿À·ù ¸Ş¼¼Áö Ãâ·Â
 }
 
 void insertEdge(Node** adjLists, int firstKey, int secondKey)
@@ -187,8 +208,9 @@ void insertEdge(Node** adjLists, int firstKey, int secondKey)
 	printf("\n");
 }
 
-void depthFirstSearch()
+void depthFirstSearch(const Node** adjLists)
 {
+	Node* current = *adjLists;
 
 }
 
