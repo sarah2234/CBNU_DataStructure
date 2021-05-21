@@ -167,43 +167,77 @@ void insertEdge(Node** adjLists, int firstKey, int secondKey)
 	{
 		if ((*(adjLists + i))->key == firstKey) //인접 리스트 내 노드 중 첫 번째로 입력받은 정점의 값이 존재할 때
 			firstVertex = *(adjLists + i); //firstVertex에 해당 노드 주소 저장
+		
 		if ((*(adjLists + i))->key == secondKey) //인접 리스트 내 노드 중 두 번째로 입력받은 정점의 값이 존재할 때
 			secondVertex = *(adjLists + i); //secondVertex에 해당 노드 주소 저장
 	}
 
-	if (firstVertex != NULL && secondVertex != NULL) //입력받은 두 개의 값에 대한 정점이 그래프 내에 존재할 때
+	//case 1: 입력받은 두 개의 값에 대한 정점이 그래프 내에 존재할 때
+	if (firstVertex != NULL && secondVertex != NULL)
 	{
+		//(firstVertex, secondVertex) 추가 작업
 		firstEdge = (Node*)malloc(sizeof(Node)); //첫 번째로 입력받은 정점을 꼬리로, 두 번째를 머리로 하는 간선 firstEdge의 메모리 할당
-		firstEdge->key = secondKey; //firstEdge는 두 번째로 입력받은 정점에 대한 노드
+		firstEdge->key = secondKey; //firstEdge는 두 번째로 입력받은 정점에 대한 노드 (첫 번째로 추가할 간선의 머리 노드)
 		firstEdge->link = NULL; //동일한 꼬리(사용자에게 첫 번째로 입력받은 정점)를 가지는 간선에 대한 노드들 중 firstEdge는 마지막 노드로서 추가됨
 		
 		while (firstVertex->link)
 		{
-			firstVertex = firstVertex->link; //첫 번째로 입력받은 정점을 꼬리로 두는 간선에 대한 노드들 중 마지막 노드를 만날 때까지 반복문 실행
+			//A. 삽입하려는 간선의 머리 정점보다 기존에 존재하는 머리 정점의 값이 더 클 때
+			if (firstVertex->link->key > secondKey)
+			{
+				firstEdge->link = firstVertex->link;
+				firstVertex->link = firstEdge; //간선의 연결 리스트 중간에 첫 번째 간선 삽입
+				break; //반복문 종료 (첫 번째 간선 삽입 완료, 두 번째 간선 삽입해야함)
+			}
 			
-			if (firstVertex->key == secondKey) //삽입하려는 간선의 정보가 이미 그래프 내에 존재할 때
+			//B. 삽입하려는 간선의 정보가 이미 그래프 내에 존재할 때
+			if (firstVertex->link->key == secondKey)
 			{
 				//무방향 그래프에서 (u, v)가 그래프에 존재하면 해당 간선은 (v, u)와 동일하므로 인접 리스트에서 v를 꼬리로 하는 간선들에 대하여 추가적으로 검사할 필요가 없다.
 				printf("\nThe edge between [%d] and [%d] already exists.\n", firstKey, secondKey); //에러 메세지 출력
 				free(firstEdge); //firstEdge 메모리 해제
 				return; //함수 종료
 			}
+			
+			firstVertex = firstVertex->link; //동일한 꼬리를 두는 간선의 연결 리스트의 끝에 다다를 때까지 반복문 실행
+			
 		}
-		firstVertex->link = firstEdge; //첫 번째로 입력받은 정점을 꼬리로 하고 두 번째로 입력받은 정점를 머리로 두는 간선 추가
 
+		//C. 추가하려는 간선의 머리가 기존의 머리 정점들 값보다 커 마지막에 삽입할 때
+		firstVertex->link = firstEdge; //첫 번째로 입력받은 정점을 꼬리로 하고 두 번째로 입력받은 정점를 머리로 두는 간선 추가
+		//(firstVertex, secondVertex) 추가 완료
+
+		//(secondVertex, firstVertex) 추가 작업
 		secondEdge = (Node*)malloc(sizeof(Node)); //두 번째로 입력받은 정점을 꼬리로, 첫 번째를 머리로 하는 간선 secondEdge의 메모리 할당
-		secondEdge->key = firstKey; //secondEdge는 첫 번째로 입력받은 정점에 대한 노드
+		secondEdge->key = firstKey; //secondEdge는 첫 번째로 입력받은 정점에 대한 노드 (두 번째로 추가할 간선의 머리 노드)
 		secondEdge->link = NULL; //동일한 꼬리(사용자에게 두 번째로 입력받은 정점)를 가지는 간선에 대한 노드들 중 secondEdge는 마지막 노드로서 추가됨
+		
 		while (secondVertex->link)
 		{
-			secondVertex = secondVertex->link; //두 번째로 입력받은 정점을 꼬리로 두는 간선에 대한 노드들 중 마지막 노드를 만날 때까지 반복문 실행
+			//A. 삽입하려는 간선의 머리 정점보다 기존에 존재하는 머리 정점의 값이 더 클 때
+			if (secondVertex->link->key > firstKey)
+			{
+				secondEdge->link = secondVertex->link; 
+				secondVertex->link = secondEdge; //간선의 연결 리스트 중간에 두 번째 간선 삽입
+				return; //함수 종료 (모든 간선 삽입 완료)
+			}
+
+			secondVertex = secondVertex->link; //동일한 꼬리를 두는 간선의 연결 리스트의 끝에 다다를 때까지 반복문 실행
 		}
+
+		//B. 추가하려는 간선의 머리가 기존의 머리 정점들 값보다 커 마지막에 삽입할 때
 		secondVertex->link = secondEdge; //두 번째로 입력받은 정점을 꼬리로 하고 첫 번째로 입력받은 정점을 머리로 두는 간선 추가
+		//(secondVertex, firstVertex) 추가 완료
+
 		return; //간선 추가 완료 후 함수 종료
 	}
-	if (firstVertex == NULL) //첫 번째로 입력받은 정점이 존재하지 않을 때
+
+	//case 2: 첫 번째로 입력받은 정점이 그래프에서 존재하지 않을 때
+	if (firstVertex == NULL)
 		printf("The vertex with the value [%d] does not exist.\n", firstKey); //에러 메세지 출력
-	if (secondVertex==NULL) //두 번째로 입력받은 정점이 존재하지 않을 때
+
+	//case 3: 두 번째로 입력받은 정점이 그래프에서 존재하지 않을 때
+	if (secondVertex==NULL)
 		printf("The vertex with the value [%d] does not exist.\n", secondKey); //에러 메세지 출력
 	printf("\n");
 }
