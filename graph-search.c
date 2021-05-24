@@ -25,12 +25,16 @@ typedef struct node {
 bool visited[MAX_VERTICES]; //깊이 우선 탐색과 너비 우선 탐색에 사용되는 visited flag
 Node* queue[MAX_VERTICES]; //너비 우선 탐색에 사용되는 큐
 int front = -1, rear = -1; //큐에서 원소가 삭제되는 곳의 인덱스인 front, 원소가 삽입되는 곳의 인덱스인 rear
+Node* stack[MAX_VERTICES]; //깊이 우선 탐색에 사용되는 스택
+int top = -1; //스택 내 위치를 알려주는 top
 
 void initializeAdjLists(Node*** adjLists); //그래프와 인접 리스트를 초기화하는 함수
 void freeAdjLists(Node** node); //인접 리스트에 할당된 메모리를 해제하는 함수
 void insertVertex(Node** adjLists, int key); //그래프에 정점을 삽입하는 함수
 void insertEdge(Node** adjLists, int tail, int head); //그래프에 간선을 삽입하는 함수
 void depthFirstSearch(Node** adjLists, Node* current); //깊이 우선 탐색으로 정점을 방문하는 함수
+void push(Node*); //스택에 노드를 삽입하는 함수
+Node* pop(); //스택에서 노드를 삭제하는 함수
 void initializeVisited(); //visited 배열을 초기화하는 함수 (그래프를 탐색할 때 visited flag 사용)
 void breathFirstSearch(Node** adjLists, Node* firstVertex); //너비 우선 탐색으로 정점을 방문하는 함수
 void addq(Node*); //큐에 노드를 삽입하는 함수
@@ -67,7 +71,6 @@ int main()
 			break;
 		case 'q': case 'Q':
 			freeAdjLists(adjLists); //'q'나 'Q'를 입력받으면 인접 리스트의 메모리 해제
-			free(queue); //큐의 메모리 해제
 			break;
 		case 'v': case 'V':
 			printf("Your Key = ");
@@ -226,19 +229,42 @@ void insertEdge(Node** adjLists, int firstKey, int secondKey)
 
 void depthFirstSearch(Node** adjLists, Node* currentVertex) //현재 조사하고자하는 정점에 대한 노드를 가리키는 currentVertex
 {
-	Node* head = NULL; //currentVertex에 부속된 간선의 머리를 조사하기 위한 head
+	Node* adjVertex = NULL; //currentVertex와 인접하는 정점에 대한 노드 adjVertex
 
 	if (visited[currentVertex->key] == TRUE) //currentVertex가 이미 조사한 적 있는 노드일 때
 		return; //함수 종료
 
 	visited[currentVertex->key] = TRUE; //조사를 완료한 노드이므로 TRUE 표시
+	push(currentVertex); //스택에 조사를 완료한 노드 push
 	printf("%2d ", currentVertex->key); //조사 완료한 노드의 값 출력
 
-	for (head = adjLists[currentVertex->key]; head; head = head->link) //currentVertex에 부속된 간선 조사
+	for (adjVertex = adjLists[currentVertex->key]; adjVertex; adjVertex = adjVertex->link) //currentVertex에 부속된 간선 조사
 	{
-		if (!visited[head->key]) //해당 간선의 머리 노드 중 아직 조사하지 않은 것이 있을 때
-			depthFirstSearch(adjLists, head); //머리 노드를 순환법으로 조사하기 위한 depthFirstSearch 호출
+		if (!visited[adjVertex->key]) //인접하는 노드 중 아직 조사하지 않은 것이 있을 때
+		{
+			visited[adjVertex->key] = TRUE; //조사를 완료한 노드이므로 TRUE 표시
+			push(adjLists[adjVertex->key]); //스택에 조사를 완료한 노드 push
+			printf("%2d ", adjVertex->key); //조사 완료한 노드의 값 출력
+			adjVertex = adjLists[adjVertex->key]; //해당 노드와 인접한 노드 조사
+		}
+
+		if (!adjVertex->link) //더이상 조사하지 않은 인접한 노드가 없을 때
+			adjVertex = pop(); //스택에서 노드를 가져옴
+		if (!adjVertex) //스택이 공백 상태여서 pop할 노드가 없을 때
+			return; //함수 종료
 	}
+}
+
+void push(Node* adjVertex)
+{
+	stack[++top] = adjVertex; //스택에 노드를 push
+}
+
+Node* pop()
+{
+	if (top == -1) //스택이 공백 상태일 때
+		return NULL; //NULL 반환
+	return stack[top--]; //스택에서 노드를 pop
 }
 
 void initializeVisited()
