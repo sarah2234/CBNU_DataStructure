@@ -21,8 +21,8 @@ int initialize(int **a); //배열을 초기화하는 함수
 int freeArray(int *a); //배열에 할당된 메모리를 해제하는 함수
 void printArray(int *a); //배열 내 데이터를 출력하는 함수
 
-int selectionSort(int *a); 
-int insertionSort(int *a);
+int selectionSort(int *a); //선택 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
+int insertionSort(int *a); //삽입 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
 int bubbleSort(int *a);
 int shellSort(int *a);
 /* recursive function으로 구현 */
@@ -163,7 +163,8 @@ void printArray(int *a)
 }
 
 
-int selectionSort(int *a)
+int selectionSort(int *a) //선택 정렬으로 오름차순 배열 형성
+//선택 정렬의 시간복잡도는 O(n^2)
 {
 	int min; //배열 내 가장 작은 수를 저장할 min
 	int minindex; //min의 인덱스 값을 저장할 minindex
@@ -176,7 +177,7 @@ int selectionSort(int *a)
 
 	for (i = 0; i < MAX_ARRAY_SIZE; i++)
 	{
-		minindex = i; //현재 비교하려는 숫자들 중 맨 왼쪽에 위치한 숫자가 최소라고 가정하고 minindex에 i 저장
+		minindex = i; //현재 비교하려는 숫자들 중 제일 왼쪽에 위치한 숫자가 최소라고 가정하고 minindex에 i 저장(=인덱스의 값이 제일 적음)
 		min = a[i]; //minindex가 가리키는 인덱스의 데이터가 최소라고 가정하고 min에 해당 데이터 값 저장
 		for(j = i+1; j < MAX_ARRAY_SIZE; j++) //min으로 설정한 값의 그다음 값부터 비교 시작
 		{
@@ -189,7 +190,6 @@ int selectionSort(int *a)
 		a[minindex] = a[i]; 
 		a[i] = min; //비교하였던 값들 중 가장 작았던 값과, 현재 비교하였던 값들 중 맨 왼쪽에 있었던 값의 위치를 변경
 		//자리를 바꾼 후 그다음 데이터를 시작으로 삼아 배열 내 데이터들의 값 비교하여 배열의 끝에 도달할 때까지 반복
-		//선택 정렬의 시간복잡도는 O(n^2)
 	}
 
 	printf("----------------------------------------------------------------\n");
@@ -197,7 +197,7 @@ int selectionSort(int *a)
 	return 0;
 }
 
-int insertionSort(int *a)
+int insertionSort(int *a) //삽입 정렬으로 오름차순 배열 형성
 {
 	int i, j, t;
 
@@ -208,14 +208,14 @@ int insertionSort(int *a)
 
 	for(i = 1; i < MAX_ARRAY_SIZE; i++)
 	{
-		t = a[i];
-		j = i;
-		while (a[j-1] > t && j > 0)
+		t = a[i]; //두 번째 데이터부터 시작하여 오른쪽에서 왼쪽으로 차례대로 데이터를 비교하기 위해 비교하려는 데이터들 중 제일 오른쪽 데이터를 t에 저장(=인덱스의 값이 제일 큼)
+		j = i; //비교하려는 데이터들 중 제일 오른쪽에 위치한 데이터의 인덱스 저장
+		while (a[j-1] > t && j > 0) //배열의 첫 부분에 도달하거나 비교하는 데이터의 값이 t의 값보다 작을 때까지 반복
 		{
-			a[j] = a[j-1];
-			j--;
+			a[j] = a[j-1]; //t와 왼쪽 데이터를 비교하였을 때 왼쪽 데이터 값이 t보다 더 크면 왼족 데이터를 오른쪽으로 이동
+			j--; //왼쪽 데이터와 비교
 		}
-		a[j] = t;
+		a[j] = t; //t의 값이 현재 위치에서의 왼쪽 데이터 값보다 크면 반복문 종료 후 해당 왼쪽 데이터의 오른쪽에 t를 배치
 	}
 
 	printf("----------------------------------------------------------------\n");
