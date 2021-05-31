@@ -165,8 +165,8 @@ void printArray(int *a)
 
 int selectionSort(int *a)
 {
-	int min;
-	int minindex;
+	int min; //배열 내 가장 작은 수를 저장할 min
+	int minindex; //min의 인덱스 값을 저장할 minindex
 	int i, j;
 
 	printf("Selection Sort: \n");
@@ -176,18 +176,20 @@ int selectionSort(int *a)
 
 	for (i = 0; i < MAX_ARRAY_SIZE; i++)
 	{
-		minindex = i;
-		min = a[i];
-		for(j = i+1; j < MAX_ARRAY_SIZE; j++)
+		minindex = i; //현재 비교하려는 숫자들 중 맨 왼쪽에 위치한 숫자가 최소라고 가정하고 minindex에 i 저장
+		min = a[i]; //minindex가 가리키는 인덱스의 데이터가 최소라고 가정하고 min에 해당 데이터 값 저장
+		for(j = i+1; j < MAX_ARRAY_SIZE; j++) //min으로 설정한 값의 그다음 값부터 비교 시작
 		{
 			if (min > a[j])
 			{
-				min = a[j];
-				minindex = j;
+				min = a[j]; //min의 값보다 더 작은 값이 존재할 때 해당 값을 min에 저장
+				minindex = j; //min의 인덱스를 minindex에 저장
 			}
 		}
-		a[minindex] = a[i];
-		a[i] = min;
+		a[minindex] = a[i]; 
+		a[i] = min; //비교하였던 값들 중 가장 작았던 값과, 현재 비교하였던 값들 중 맨 왼쪽에 있었던 값의 위치를 변경
+		//자리를 바꾼 후 그다음 데이터를 시작으로 삼아 배열 내 데이터들의 값 비교하여 배열의 끝에 도달할 때까지 반복
+		//선택 정렬의 시간복잡도는 O(n^2)
 	}
 
 	printf("----------------------------------------------------------------\n");
