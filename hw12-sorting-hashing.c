@@ -254,7 +254,7 @@ int bubbleSort(int *a) //서로 인접한 두 데이터를 비교하여 정렬
 	return 0;
 }
 
-int shellSort(int *a)
+int shellSort(int *a) //h만큼의 간격으로 떨어진 레코드를 삽입 정렬
 {
 	int i, j, k, h, v;
 
@@ -263,7 +263,7 @@ int shellSort(int *a)
 
 	printArray(a);
 
-	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2)
+	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2) //한 단계가 수행될 때마다 h가 1/2배로 감소하여 h /= 2 한 후 h가 0이 될 때까지 반복
 	{
 		for (i = 0; i < h; i++)
 		{
@@ -286,33 +286,33 @@ int shellSort(int *a)
 	return 0;
 }
 
-int quickSort(int *a, int n)
+int quickSort(int *a, int n) //피벗 레코드를 선택하여 피벗의 왼쪽에는 피벗의 키보다 작거나 같고 피벗의 오른쪽에는 피벗의 키보다 크거나 같은 레코드들을 정렬
 {
 	int v, t;
 	int i, j;
 
 	if (n > 1)
 	{
-		v = a[n-1];
-		i = -1;
-		j = n - 1;
+		v = a[n-1]; //배열의 마지막 레코드를 피벗으로 설정
+		i = -1; //i는 배열의 왼쪽부터 가리킴
+		j = n - 1; //j는 배열의 오른쪽부터 가리킴
 
 		while(1)
 		{
-			while(a[++i] < v);
-			while(a[--j] > v);
+			while(a[++i] < v); //피벗보다 크거나 같은 값이 나올 때까지 i 증가(왼쪽>오른쪽)
+			while(a[--j] > v); //피벗보다 작거나 같은 값이 나올 때까지 j 감소(오른쪽>왼쪽)
 
-			if (i >= j) break;
+			if (i >= j) break; //i와 j가 교차하면 while문 종료
 			t = a[i];
 			a[i] = a[j];
-			a[j] = t;
+			a[j] = t; //i < j 일 때 오른쪽과 왼쪽의 레코드의 위치를 서로 바꿈
 		}
 		t = a[i];
 		a[i] = a[n-1];
-		a[n-1] = t;
+		a[n-1] = t; //i와 j가 교차하면 피벗과 a[i]의 레코드의 위치를 서로 바꿈
 
-		quickSort(a, i);
-		quickSort(a+i+1, n-i-1);
+		quickSort(a, i); //피벗의 위치가 i로 바뀐 후 피벗의 왼쪽에 위치한 배열은 a[i-1]을 피벗으로 하는 퀵 정렬을 시행
+		quickSort(a+i+1, n-i-1); //피벗의 오른쪽에 위치한 배열은 a[n-i-2]을 피벗으로 하는 퀵 정렬을 시행
 	}
 
 
