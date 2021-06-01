@@ -387,7 +387,7 @@ int search(int *ht, int key)
 		return index; //key의 주소 리턴
 
     //case 2: 해시 함수의 key에 대한 연산 결과값(key의 예상 주소) != key의 실제 주소
-	while(ht[++index] != key) //해시 함수의 key에 대한 연산 결과괎과 key의 주소가 동일하지 않아 index를 1씩 증가시키며 key 탐색
+	while(ht[++index] != key) //해시 함수의 key에 대한 연산 결과값과 key의 주소가 동일하지 않아 index를 1씩 증가시키며 key 탐색
 	{
 		index = index % MAX_HASH_TABLE_SIZE; //해시 테이블의 주소에 맞게 index 변환
 	}
