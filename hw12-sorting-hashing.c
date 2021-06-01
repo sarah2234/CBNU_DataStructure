@@ -23,7 +23,7 @@ void printArray(int *a); //배열 내 데이터를 출력하는 함수
 
 int selectionSort(int *a); //선택 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
 int insertionSort(int *a); //삽입 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
-int bubbleSort(int *a);
+int bubbleSort(int *a); //버블 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
 int shellSort(int *a);
 /* recursive function으로 구현 */
 int quickSort(int *a, int n);
@@ -163,8 +163,8 @@ void printArray(int *a)
 }
 
 
-int selectionSort(int *a) //선택 정렬으로 오름차순 배열 형성
-//선택 정렬의 시간복잡도는 O(n^2)
+int selectionSort(int *a) //해당 회차에서 가장 작은 데이터 값이 제일 왼쪽에 배치되도록 두 데이터의 자리를 변경하여 정렬
+//선택 정렬의 시간복잡도는 최악의 경우 O(n^2)
 {
 	int min; //배열 내 가장 작은 수를 저장할 min
 	int minindex; //min의 인덱스 값을 저장할 minindex
@@ -197,7 +197,8 @@ int selectionSort(int *a) //선택 정렬으로 오름차순 배열 형성
 	return 0;
 }
 
-int insertionSort(int *a) //삽입 정렬으로 오름차순 배열 형성
+int insertionSort(int *a) //배열의 앞에서부터 차례대로 정렬이 되어있는 부분과 비교하여 알맞은 위치에 데이터를 삽입하여 정렬
+//삽입 정렬의 시간복잡도는 최악의 경우 O(n^2)
 {
 	int i, j, t;
 
@@ -224,7 +225,8 @@ int insertionSort(int *a) //삽입 정렬으로 오름차순 배열 형성
 	return 0;
 }
 
-int bubbleSort(int *a)
+int bubbleSort(int *a) //서로 인접한 두 데이터를 비교하여 정렬
+//버블 정렬의 시간복잡도는 최악의 경우 O(n^2)
 {
 	int i, j, t;
 
@@ -237,11 +239,11 @@ int bubbleSort(int *a)
 	{
 		for (j = 0; j < MAX_ARRAY_SIZE; j++)
 		{
-			if (a[j-1] > a[j])
+			if (a[j-1] > a[j]) //인접한 두 데이터 중 왼쪽 데이터의 값이 오른쪽 데이터보다 클 때
 			{
 				t = a[j-1];
-				a[j-1] = a[j];
-				a[j] = t;
+				a[j-1] = a[j]; 
+				a[j] = t; //두 데이터의 위치를 바꾼다.
 			}
 		}
 	}
@@ -318,10 +320,10 @@ int quickSort(int *a, int n)
 }
 
 int hashCode(int key) {
-   return key % MAX_HASH_TABLE_SIZE;
+   return key % MAX_HASH_TABLE_SIZE; //해시 테이블에서의 해당 key에 맞는 주소 리턴
 }
 
-int hashing(int *a, int **ht)
+int hashing(int *a, int **ht) //해시 함수를 통해 데이터를 해시 테이블 내 적절한 위치에 배치시켜 데이터를 빠르게 찾는 방법
 {
 	int *hashtable = NULL;
 
@@ -347,25 +349,25 @@ int hashing(int *a, int **ht)
 	for (int i = 0; i < MAX_ARRAY_SIZE; i++)
 	{
 		key = a[i];
-		hashcode = hashCode(key);
+		hashcode = hashCode(key); //데이터의 key 값을 해시 함수를 통해 해시 테이블 주소로 변환
 		/*
 		printf("key = %d, hashcode = %d, hashtable[%d]=%d\n", key, hashcode, hashcode, hashtable[hashcode]);
 		*/
-		if (hashtable[hashcode] == -1)
+		if (hashtable[hashcode] == -1) //해시 테이블에서 해당 주소가 비어있는 공간일 때 
 		{
-			hashtable[hashcode] = key;
-		} else 	{
+			hashtable[hashcode] = key; //해당 주소에 key 저장
+		} else 	{ //해시 테이블에서 해당 주소에 데이터가 이미 들어있을 떄
 
 			index = hashcode;
 
-			while(hashtable[index] != -1)
+			while(hashtable[index] != -1)  //해시 테이블에서 빈 공간을 찾을 때까지 반복
 			{
-				index = (++index) % MAX_HASH_TABLE_SIZE;
+				index = (++index) % MAX_HASH_TABLE_SIZE; //해시 테이블 내에서 index를 1씩 증가하며 빈 공간 탐색
 				/*
 				printf("index = %d\n", index);
 				*/
 			}
-			hashtable[index] = key;
+			hashtable[index] = key; //해시 테이블 내 찾은 빈 공간에 key 저장
 		}
 	}
 
