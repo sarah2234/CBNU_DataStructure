@@ -376,16 +376,18 @@ int hashing(int *a, int **ht) //해시 함수를 통해 데이터를 해시 테이블 내 적절한 
 
 int search(int *ht, int key)
 {
-	int index = hashCode(key);
+	int index = hashCode(key); //해시 함수를 통해 해당 key에 대한 해시 테이블의 주소를 얻음
 
-	if(ht[index] == key)
-		return index;
+    //case 1: 해시 함수의 key에 대한 연산 결과값(key의 예상 주소) == key의 실제 주소
+	if(ht[index] == key) //해시 함수의 key에 대한 연산 결과값이 key의 주소와 동일할 때
+		return index; //key의 주소 리턴
 
-	while(ht[++index] != key)
+    //case 2: 해시 함수의 key에 대한 연산 결과값(key의 예상 주소) != key의 실제 주소
+	while(ht[++index] != key) //해시 함수의 key에 대한 연산 결과괎과 key의 주소가 동일하지 않아 index를 1씩 증가시키며 key 탐색
 	{
-		index = index % MAX_HASH_TABLE_SIZE;
+		index = index % MAX_HASH_TABLE_SIZE; //해시 테이블의 주소에 맞게 index 변환
 	}
-	return index;
+	return index; //해시 테이블에서 key를 찾았을 때 key의 주소 리턴
 }
 
 
