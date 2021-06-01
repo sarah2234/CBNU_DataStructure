@@ -24,19 +24,19 @@ void printArray(int *a); //배열 내 데이터를 출력하는 함수
 int selectionSort(int *a); //선택 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
 int insertionSort(int *a); //삽입 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
 int bubbleSort(int *a); //버블 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
-int shellSort(int *a);
+int shellSort(int *a); //셸 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
 /* recursive function으로 구현 */
-int quickSort(int *a, int n);
+int quickSort(int *a, int n); //퀵 정렬 알고리즘을 통해 배열 내 데이터의 값을 오름차순으로 정렬하는 함수
 
 
 /* hash code generator, key % MAX_HASH_TABLE_SIZE */
-int hashCode(int key);
+int hashCode(int key); //해시 테이블에서의 key의 주소를 결정하는 해시 함수
 
 /* array a에대 한 hash table을 만든다. */
-int hashing(int *a, int **ht);
+int hashing(int *a, int **ht); //해시 테이블을 생성하여 해싱을 수행하는 함수
 
 /* hash table에서 key를 찾아 hash table의 index return */
-int search(int *ht, int key);
+int search(int *ht, int key); //해시 함수를 이용하여 해시 테이블 내 key를 찾는 함수
 
 
 int main()
@@ -47,7 +47,7 @@ int main()
 	int key = -1;
 	int index = -1;
 
-	srand(time(NULL));
+	srand(time(NULL)); //srand의 seed 값을 매번 바꿔 난수를 생성함
 
 	printf("[----- [이승현] [2020039075] -----]\n");
 
@@ -111,14 +111,14 @@ int main()
 			break;
 
 		case 'p': case 'P':
-			printArray(array);
+			printArray(array); //'p'나 'P'를 입력받으면 배열의 요소 출력
 			break;
 		default:
-			printf("\n       >>>>>   Concentration!!   <<<<<     \n");
+			printf("\n       >>>>>   Concentration!!   <<<<<     \n"); //이외의 명령어를 입력받으면 에러 메세지 출력
 			break;
 		}
 
-	}while(command != 'q' && command != 'Q');
+	}while(command != 'q' && command != 'Q'); //'q'나 'Q'를 입력받으면 반복문 종료
 
 	return 1;
 }
@@ -217,7 +217,7 @@ int insertionSort(int *a) //배열의 앞에서부터 차례대로 정렬이 되어있는 부분과 비
 			j--; //왼쪽 데이터와 비교
 		}
 		a[j] = t; //t의 값이 현재 위치에서의 왼쪽 데이터 값보다 크면 반복문 종료 후 해당 왼쪽 데이터의 오른쪽에 t를 삽입
-		//혹은 왼쪽 끝까지 도달하였을 때 해당 자리에 데이터 삽입
+		//혹은 비교하는 배열의 요소들 중 왼쪽 끝까지 도달하였을 때 해당 자리에 데이터 삽입
 	}
 
 	printf("----------------------------------------------------------------\n");
@@ -236,9 +236,9 @@ int bubbleSort(int *a) //서로 인접한 두 데이터를 비교하여 정렬
 
 	printArray(a); //정렬 전 배열 출력
 
-	for(i = 0; i < MAX_ARRAY_SIZE; i++)
+	for(i = 0; i < MAX_ARRAY_SIZE; i++) //요소의 개수만큼 반복문 시행
 	{
-		for (j = 0; j < MAX_ARRAY_SIZE; j++)
+		for (j = 1; j < MAX_ARRAY_SIZE - 1; j++) //(요소의 개수 - 1)번만큼 반복문 시행
 		{
 			if (a[j-1] > a[j]) //인접한 두 데이터 중 왼쪽 데이터의 값이 오른쪽 데이터보다 클 때
 			{
@@ -279,7 +279,7 @@ int shellSort(int *a) //h만큼의 간격으로 떨어진 레코드를 삽입 정렬
 					k -= h; //현재 k에서 h만큼 뺌
 				}
 				a[k] = v; //v의 값이 방금 비교한 데이터 값보다 크면 반복문 종료 후 해당 데이터의 오른쪽에 삽입
-				//혹은 왼쪽 끝까지 도달하였을 때 해당 자리에 데이터 삽입
+				//혹은 비교하는 배열의 요소들 중 왼쪽 끝까지 도달하였을 때 해당 자리에 데이터 삽입
 			}
 		}
 	}
@@ -309,7 +309,7 @@ int quickSort(int *a, int n) //피벗 레코드를 선택하여 피벗의 왼쪽에는 피벗의 키�
 			if (i >= j) break; //i와 j가 교차하면 while문 종료
 			t = a[i];
 			a[i] = a[j];
-			a[j] = t; //i < j 일 때 오른쪽과 왼쪽의 레코드의 위치를 서로 바꿈
+			a[j] = t; //i < j 일 때(i와 j가 교차하지 않았을 때) 오른쪽과 왼쪽의 레코드의 위치를 서로 바꿈
 		}
 		t = a[i];
 		a[i] = a[n-1];
@@ -393,6 +393,3 @@ int search(int *ht, int key)
 	}
 	return index; //해시 테이블에서 key를 찾았을 때 key의 주소 리턴
 }
-
-
-
