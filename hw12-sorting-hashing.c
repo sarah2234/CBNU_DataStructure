@@ -42,8 +42,8 @@ int search(int *ht, int key);
 int main()
 {
 	char command;
-	int *array = NULL;
-	int *hashtable = NULL;
+	int *array = NULL; //정렬을 할 배열
+	int *hashtable = NULL; //해싱에 쓰이는 해시 테이블
 	int key = -1;
 	int index = -1;
 
@@ -63,50 +63,50 @@ int main()
 		printf("----------------------------------------------------------------\n");
 
 		printf("Command = ");
-		scanf(" %c", &command);
+		scanf(" %c", &command); //명령어 입력
 
 		switch(command) {
 		case 'z': case 'Z':
-			initialize(&array);
+			initialize(&array); //'z'나 'Z'를 입력받으면 배열 초기화(메모리 할당)
 			break;
 		case 'q': case 'Q':
-			freeArray(array);
+			freeArray(array); //'q'나 'Q'를 입력받으면 배열의 메모리 해제
 			break;
 		case 's': case 'S':
-			selectionSort(array);
+			selectionSort(array); //'s'나 'S'를 입력받으면 선택 정렬로 배열 정렬
 			break;
 		case 'i': case 'I':
-			insertionSort(array);
+			insertionSort(array); //'i'나 'I'를 입력받으면 삽입 정렬로 배열 정렬
 			break;
 		case 'b': case 'B':
-			bubbleSort(array);
+			bubbleSort(array); //'b'나 'B'를 입력받으면 버블 정렬로 배열 정렬
 			break;
 		case 'l': case 'L':
-			shellSort(array);
+			shellSort(array); //'l'나 'L'를 입력받으면 셸 정렬로 배열 정렬
 			break;
-		case 'k': case 'K':
+		case 'k': case 'K': //'k'나 'K'를 입력받으면 퀵 정렬로 배열 정렬
 			printf("Quick Sort: \n");
 			printf("----------------------------------------------------------------\n");
-			printArray(array);
+			printArray(array); //정렬 이전의 배열 출력
 			quickSort(array, MAX_ARRAY_SIZE);
 			printf("----------------------------------------------------------------\n");
-			printArray(array);
+			printArray(array); //퀵 정렬 후 배열 출력
 
 			break;
 
 		case 'h': case 'H':
 			printf("Hashing: \n");
 			printf("----------------------------------------------------------------\n");
-			printArray(array);
-			hashing(array, &hashtable);
-			printArray(hashtable);
+			printArray(array); //해싱 이전의 배열 출력
+			hashing(array, &hashtable); //'h'나 'H'를 입력받으면 해싱으로 배열 내부 변경
+			printArray(hashtable); //해시 테이블 출력
 			break;
 
 		case 'e': case 'E':
 			printf("Your Key = ");
 			scanf("%d", &key);
 			printArray(hashtable);
-			index = search(hashtable, key);
+			index = search(hashtable, key); //'e'나 'E'를 입력받으면 해시 테이블에서 key의 주소 탐색
 			printf("key = %d, index = %d,  hashtable[%d] = %d\n", key, index, index, hashtable[index]);
 			break;
 
